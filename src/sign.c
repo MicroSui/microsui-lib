@@ -35,7 +35,7 @@ size_t build_message_with_intent(uint8_t *tx_bytes, size_t tx_len, uint8_t *outp
     return offset; // Total length of messageWithIntent
 }
 
-int microsui_sign_offline(uint8_t sui_sig[97], const char* message_hex, const uint8_t private_key[32]) {
+int microsui_sign_message(uint8_t sui_sig[97], const char* message_hex, const uint8_t private_key[32]) {
     // 1. Convert the HEX message to binary bytes
     size_t msg_len = strlen(message_hex) / 2;  // 2 hex chars = 1 byte
     uint8_t* message = (uint8_t*)malloc(msg_len);
