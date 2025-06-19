@@ -23,7 +23,7 @@ microsui-lib/
 │       └── sign.h
 ├── src/                     # Library source files (.c)
 │   ├── sign.c
-├── deps/                    # Third-party dependencies
+├── lib/                    # Third-party dependencies
 │   ├── monocypher/
 │   └── compact25519/
 │       └── c25519/
@@ -48,7 +48,7 @@ microsui-lib/
 - `microsui/sign.h`:  
   Public API header exposing the MicroSui Sign functions.
 
-### 📦 Dependencies (`/deps`)
+### 📦 Dependencies (`/lib`)
 
 - `monocypher`:  
   Lightweight cryptographic primitives.

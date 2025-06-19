@@ -1,13 +1,13 @@
 ROOT_DIR := ../..
 SRC := $(ROOT_DIR)/src
 INCLUDE := $(ROOT_DIR)/include
-DEPS := $(ROOT_DIR)/deps
+LIB := $(ROOT_DIR)/lib
 
-MONOCYPHER := $(DEPS)/monocypher
-COMPACT := $(DEPS)/compact25519
+MONOCYPHER := $(LIB)/monocypher
+COMPACT := $(LIB)/compact25519
 C25519 := $(COMPACT)/c25519
 
-CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(DEPS) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
+CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
 
 SOURCES := offline_sign.c constants.c \
            $(SRC)/sign.c \

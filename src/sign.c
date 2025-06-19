@@ -2,8 +2,8 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
-#include "monocypher/monocypher.h"
-#include "compact25519/compact_ed25519.h"
+#include "monocypher.h"
+#include "compact_ed25519.h"
 
 void hex_to_bytes(const char* hex_str, uint8_t* bytes, size_t bytes_len) {
     for (size_t i = 0; i < bytes_len; i++) {
