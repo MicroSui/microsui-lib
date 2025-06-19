@@ -5,20 +5,31 @@
 #include "monocypher.h"
 #include "compact_ed25519.h"
 
-void hex_to_bytes(const char* hex_str, uint8_t* bytes, size_t bytes_len) {
-    for (size_t i = 0; i < bytes_len; i++) {
-        sscanf(hex_str + 2*i, "%2hhx", &bytes[i]);  // Convert 2 hex chars to 1 byte
+static const char hex_digits[] = "0123456789abcdef";
+
+static inline uint8_t hex_val(char c) {
+    if (c >= '0' && c <= '9') return c - '0';
+    if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+    if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+    return 0;
+}
+
+void hex_to_bytes(const char* hex_str, uint8_t* bytes, uint32_t bytes_len) {
+    for (uint32_t i = 0; i < bytes_len; i++) {
+        uint8_t hi = hex_val(hex_str[2*i    ]);
+        uint8_t lo = hex_val(hex_str[2*i + 1]);
+        bytes[i] = (hi << 4) | lo;
     }
 }
 
-void print_hex(const char* label, const uint8_t* data, size_t len) {
-    printf("%s (%zu bytes): ", label, len);
-    for (size_t i = 0; i < len; i++) {
-        printf("%02x", data[i]);
+void bytes_to_hex(const uint8_t* bytes, uint32_t bytes_len, char* hex_str) {
+    for (uint32_t i = 0; i < bytes_len; i++) {
+        uint8_t b = bytes[i];
+        hex_str[2*i    ] = hex_digits[(b >> 4) & 0x0F];
+        hex_str[2*i + 1] = hex_digits[b & 0x0F];
     }
-    printf("\n\n");
+    hex_str[2 * bytes_len] = '\0';
 }
-
 
 size_t build_message_with_intent(uint8_t *tx_bytes, size_t tx_len, uint8_t *output) {
     size_t offset = 0;
