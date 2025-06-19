@@ -16,13 +16,15 @@ You will find the `.out` binaries to run in each example folder.
 
 ## Project Directory Structure:
 
-```matlab
+```yaml
 microsui-lib/
 ├── include/                 # Public header files (API)
 │   └── microsui/
-│       └── sign.h
+│       ├── sign.h
+│       └── utils.h
 ├── src/                     # Library source files (.c)
 │   ├── sign.c
+│   ├── utils.c
 ├── lib/                    # Third-party dependencies
 │   ├── monocypher/
 │   └── compact25519/
@@ -42,11 +44,15 @@ microsui-lib/
 
 - `sign.c`:  
   Core implementation of the message signing logic using `monocypher` and `compact25519`.
+- `utils.c`:  
+  Useful complementary functions to be used by other library functions or by the user.
 
 ### 📂 Public Headers (`/include`)
 
 - `microsui/sign.h`:  
   Public API header exposing the MicroSui Sign functions.
+- `microsui/utils.h`:  
+  Public API header exposing useful complementary functions.
 
 ### 📦 Dependencies (`/lib`)
 
