@@ -10,7 +10,7 @@ C25519 := $(COMPACT)/c25519
 CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
 
 SOURCES := offline_sign.c constants.c \
-           $(SRC)/sign.c \
+           $(SRC)/*.c \
            $(wildcard $(MONOCYPHER)/*.c) \
            $(wildcard $(COMPACT)/*.c) \
            $(wildcard $(C25519)/*.c)

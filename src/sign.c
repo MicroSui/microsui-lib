@@ -1,24 +1,11 @@
-#include <stdio.h>
 #include <stdint.h>
+#include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include "microsui/utils.h"
 #include "monocypher.h"
 #include "compact_ed25519.h"
-
-void hex_to_bytes(const char* hex_str, uint8_t* bytes, size_t bytes_len) {
-    for (size_t i = 0; i < bytes_len; i++) {
-        sscanf(hex_str + 2*i, "%2hhx", &bytes[i]);  // Convert 2 hex chars to 1 byte
-    }
-}
-
-void print_hex(const char* label, const uint8_t* data, size_t len) {
-    printf("%s (%zu bytes): ", label, len);
-    for (size_t i = 0; i < len; i++) {
-        printf("%02x", data[i]);
-    }
-    printf("\n\n");
-}
-
 
 size_t build_message_with_intent(uint8_t *tx_bytes, size_t tx_len, uint8_t *output) {
     size_t offset = 0;
