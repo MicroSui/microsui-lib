@@ -101,13 +101,13 @@ static void bech32_create_checksum(const char *hrp, const uint8_t *data, size_t 
     }
 }
 
-int microsui_decode_sui_privkey(const char *bech, uint8_t secret32[32]) {
-    size_t len = strlen(bech);
+int microsui_decode_sui_privkey(const char *privkey_bech, uint8_t privkey_bytes_output[32]) {
+    size_t len = strlen(privkey_bech);
     if (len != PK_BECH32_LEN) return -1;
 
     bool hasLower = false, hasUpper = false;
     for (size_t i = 0; i < len; i++) {
-        char c = bech[i];
+        char c = privkey_bech[i];
         if (c >= 'a' && c <= 'z') hasLower = true;
         if (c >= 'A' && c <= 'Z') hasUpper = true;
     }
@@ -115,7 +115,7 @@ int microsui_decode_sui_privkey(const char *bech, uint8_t secret32[32]) {
 
     char str[PK_BECH32_LEN + 1];
     for (size_t i = 0; i < len; i++) {
-        str[i] = TOLOWER(bech[i]);
+        str[i] = TOLOWER(privkey_bech[i]);
     }
     str[len] = '\0';
 
@@ -152,11 +152,11 @@ int microsui_decode_sui_privkey(const char *bech, uint8_t secret32[32]) {
     if (!convert_bits(ext_secret, &ext_len, words, words_len, 5, 8, false)) return -1;
     if (ext_len != 33) return -1;
 
-    memcpy(secret32, ext_secret + 1, 32);
+    memcpy(privkey_bytes_output, ext_secret + 1, 32);
     return 0;
 }
 
-int microsui_encode_sui_privkey(const uint8_t *privkey_bytes, char *output) {
+int microsui_encode_sui_privkey(const uint8_t *privkey_bytes, char *privkey_bech_output) {
     const char *hrp = "suiprivkey";
     const uint8_t scheme_flag = 0x00;
     const size_t output_len = PK_BECH32_LEN + 1;
@@ -180,18 +180,18 @@ int microsui_encode_sui_privkey(const uint8_t *privkey_bytes, char *output) {
     }
 
     for (size_t i = 0; i < hrp_len; i++) {
-        output[i] = hrp[i];
+        privkey_bech_output[i] = hrp[i];
     }
-    output[hrp_len] = '1';
+    privkey_bech_output[hrp_len] = '1';
 
     size_t idx = hrp_len + 1;
     for (size_t i = 0; i < data5_len; i++) {
-        output[idx++] = ALPHABET[data5[i]];
+        privkey_bech_output[idx++] = ALPHABET[data5[i]];
     }
 
     for (int i = 0; i < 6; i++) {
-        output[idx++] = ALPHABET[checksum[i]];
+        privkey_bech_output[idx++] = ALPHABET[checksum[i]];
     }
-    output[idx] = '\0'; // null-terminator
+    privkey_bech_output[idx] = '\0'; // null-terminator
     return 0;
 }
