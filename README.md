@@ -1,7 +1,5 @@
 # microsui-lib
 
----
-
 ## Let's begin:
 
 ### Build all the examples:
@@ -21,20 +19,20 @@ microsui-lib/
 ├── include/                 # Public header files (API)
 │   └── microsui/
 │       ├── sign.h
+│       ├── cryptography.h
 │       └── utils.h
 ├── src/                     # Library source files (.c)
 │   ├── sign.c
+│   ├── cryptography.c
 │   ├── utils.c
 ├── lib/                    # Third-party dependencies
 │   ├── monocypher/
 │   └── compact25519/
 │       └── c25519/
 ├── examples/                # Usage examples
-│   └── offline_sign/
-│       ├── constants.c
-│       ├── constants.h
-│       ├── offline_sign.c
-│       └── Makefile
+│   ├── offline_sign/
+│   ├── offline_sign_with_bech32_privkey/
+│   └── encode_decode_privkey/
 └── Makefile                 # Root Makefile to build all examples
 ```
 
@@ -44,6 +42,8 @@ microsui-lib/
 
 - `sign.c`:  
   Core implementation of the message signing logic using `monocypher` and `compact25519`.
+- `cryptography.c`:  
+  Core cryptographic utilities for encoding, decoding, key transformations, and other format-related operations, including Bech32 support.
 - `utils.c`:  
   Useful complementary functions to be used by other library functions or by the user.
 
@@ -51,6 +51,8 @@ microsui-lib/
 
 - `microsui/sign.h`:  
   Public API header exposing the MicroSui Sign functions.
+- `microsui/cryptography.h`:  
+  Public API header exposing the MicroSui Cryptography functions.
 - `microsui/utils.h`:  
   Public API header exposing useful complementary functions.
 
@@ -72,6 +74,26 @@ microsui-lib/
 - `Makefile`:  
   Builds the example with all dependencies automatically.
 - Output binary: `offline_sign.out`
+
+#### Offline Sign with Bech32 Private Key (`/examples/offline_sign_with_bech32_privkey`)
+
+- `offline_sign_with_bech32_privkey.c`:  
+  Demonstrates how to sign a Sui transaction offline using a Sui compatible bech32 private key.
+- `constants.c` & `constants.h`:  
+  Helper files providing a test private key and related constants.
+- `Makefile`:  
+  Builds the example with all dependencies automatically.
+- Output binary: `offline_sign_with_bech32_privkey.out`
+
+#### Encode & Decode Bech32 Private Keys (`/examples/encode_decode_privkey`)
+
+- `encode_decode_privkey.c`:  
+  Demonstrates how to encode and decode Sui compatible bech32 private keys.
+- `constants.c` & `constants.h`:  
+  Helper files providing a test private key and related constants.
+- `Makefile`:  
+  Builds the example with all dependencies automatically.
+- Output binary: `encode_decode_privkey.out`
 
 ### 🛠️ Global Makefile
 
