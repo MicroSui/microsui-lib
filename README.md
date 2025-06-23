@@ -33,6 +33,7 @@ microsui-lib/
 │   ├── offline_sign/
 │   ├── offline_sign_with_bech32_privkey/
 │   └── encode_decode_privkey/
+├── library.json             # Enables compatibility for standard libraries in environments such as PlatformIO
 └── Makefile                 # Root Makefile to build all examples
 ```
 
@@ -99,3 +100,9 @@ microsui-lib/
 
 - At the root level:  
   Detects and builds all available examples automatically.
+
+## 👽 PlatformIO Compatibility
+
+This library is fully compatible with PlatformIO and is listed in the official PlatformIO Library Registry.
+
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/gustavogb/library/microsui-lib.svg)](https://registry.platformio.org/libraries/gustavogb/microsui-lib)
