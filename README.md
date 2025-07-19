@@ -1,6 +1,11 @@
 # microsui-lib
 
-## Let's begin:
+This library is **_Arduino and PlatformIO Compatible_**
+
+[![microsui-lib on Arduino Registry](https://img.shields.io/badge/Arduino-microsui--lib-blue.svg)](https://registry.arduino.cc/libraries/microsui-lib)
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/gustavogb/library/microsui-lib.svg)](https://registry.platformio.org/libraries/gustavogb/microsui-lib)
+
+## The Library:
 
 ### Build all the examples:
 
@@ -28,12 +33,15 @@ microsui-lib/
 │   │       └── c25519/
 │   ├── sign.c
 │   ├── cryptography.c
-│   └── utils.c
+│   ├── utils.c
+│   └── MicroSui.h           # Arduino header (must be in src)
 ├── examples/                # Usage examples
+│   ├── ArduinoExamples/
 │   ├── offline_sign/
 │   ├── offline_sign_with_bech32_privkey/
 │   └── encode_decode_privkey/
-├── library.json             # Enables compatibility for PlatformIO
+├── library.properties       # Enables Arduino library compatibility
+├── library.json             # Enables PlatformIO library compatibility
 └── Makefile                 # Root Makefile to build all examples
 ```
 
@@ -100,6 +108,12 @@ microsui-lib/
 
 - At the root level:  
   Detects and builds all available examples automatically.
+
+## ♾ Arduino Compatibility
+
+This library is fully compatible with Arduino and is listed in the official Arduino Library Registry.
+
+[![microsui-lib on Arduino Registry](https://img.shields.io/badge/Arduino-microsui--lib-blue.svg)](https://registry.arduino.cc/libraries/microsui-lib)
 
 ## 👽 PlatformIO Compatibility
 
