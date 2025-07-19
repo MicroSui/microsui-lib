@@ -1,6 +1,6 @@
 {
     "name": "microsui-lib",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "MicroSui Library is a lightweight C library for embedded systems to interact with the Sui Network Blockchain",
     "keywords": "microsui, sui, blockchain, sui-network, walrus, cryptography, c-library",
     "repository": {
@@ -22,15 +22,15 @@
         "srcDir": ".",
         "includeDir": "include",
         "flags": [
-            "-Ilib/monocypher",
-            "-Ilib/compact25519",
-            "-Ilib/compact25519/c25519"
+            "-Isrc/lib/monocypher",
+            "-Isrc/lib/compact25519",
+            "-Isrc/lib/compact25519/c25519"
         ],
         "srcFilter": [
             "+<src/*.c>",
-            "+<lib/monocypher/*.c>",
-            "+<lib/compact25519/*.c>",
-            "+<lib/compact25519/c25519/*.c>"
+            "+<src/lib/monocypher/*.c>",
+            "+<src/lib/compact25519/*.c>",
+            "+<src/lib/compact25519/c25519/*.c>"
         ]
     }
 }

@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "microsui/utils.h"
-#include "monocypher.h"
-#include "compact_ed25519.h"
+#include "lib/monocypher/monocypher.h"
+#include "lib/compact25519/compact_ed25519.h"
 
 size_t build_message_with_intent(uint8_t *tx_bytes, size_t tx_len, uint8_t *output) {
     size_t offset = 0;

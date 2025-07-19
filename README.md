@@ -22,18 +22,18 @@ microsui-lib/
 │       ├── cryptography.h
 │       └── utils.h
 ├── src/                     # Library source files (.c)
+│   ├── lib/                 # Third-party dependencies
+│   │   ├── monocypher/
+│   │   └── compact25519/
+│   │       └── c25519/
 │   ├── sign.c
 │   ├── cryptography.c
-│   ├── utils.c
-├── lib/                    # Third-party dependencies
-│   ├── monocypher/
-│   └── compact25519/
-│       └── c25519/
+│   └── utils.c
 ├── examples/                # Usage examples
 │   ├── offline_sign/
 │   ├── offline_sign_with_bech32_privkey/
 │   └── encode_decode_privkey/
-├── library.json             # Enables compatibility for standard libraries in environments such as PlatformIO
+├── library.json             # Enables compatibility for PlatformIO
 └── Makefile                 # Root Makefile to build all examples
 ```
 
