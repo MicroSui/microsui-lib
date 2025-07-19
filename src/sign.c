@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "microsui/utils.h"
+#include "utils.h"
 #include "lib/monocypher/monocypher.h"
 #include "lib/compact25519/compact_ed25519.h"
 
