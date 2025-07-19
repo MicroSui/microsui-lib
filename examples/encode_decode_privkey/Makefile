@@ -1,7 +1,7 @@
 ROOT_DIR := ../..
 SRC := $(ROOT_DIR)/src
 INCLUDE := $(ROOT_DIR)/include
-LIB := $(ROOT_DIR)/lib
+LIB := $(ROOT_DIR)/src/lib
 
 MONOCYPHER := $(LIB)/monocypher
 COMPACT := $(LIB)/compact25519
