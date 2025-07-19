@@ -1,4 +1,4 @@
-# microsui-lib
+# MicroSui C Library --- _microsui-lib_
 
 This library is **_Arduino and PlatformIO Compatible_**
 
