@@ -1,6 +1,9 @@
 #ifndef BYTE_CONVERSIONS_H
 #define BYTE_CONVERSIONS_H
 
+#include <stdint.h>
+#include <stddef.h>
+
 void hex_to_bytes(const char* hex_str, uint8_t* bytes, uint32_t bytes_len);
 
 void bytes_to_hex(const uint8_t* bytes, uint32_t bytes_len, char* hex_str);
