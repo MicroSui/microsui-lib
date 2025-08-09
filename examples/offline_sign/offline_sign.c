@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "microsui/sign.h"
-#include "microsui/utils.h"
+#include "microsui/byte_conversions.h"
 #include "constants.h"
 
 

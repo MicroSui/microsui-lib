@@ -43,7 +43,7 @@ void bytes_to_hex(const uint8_t* bytes, uint32_t bytes_len, char* hex_str) {
     hex_str[2 * bytes_len] = '\0';
 }
 
-void bytes_to_base64(const uint8_t* input, size_t input_len, char* output, size_t output_size) {
+int bytes_to_base64(const uint8_t* input, size_t input_len, char* output, size_t output_size) {
     size_t i = 0, j = 0;
 
     while (i + 2 < input_len) {
@@ -78,10 +78,12 @@ void bytes_to_base64(const uint8_t* input, size_t input_len, char* output, size_
 
     if (j < output_size)
         output[j] = '\0';
+
+    return 0; // success
 }
 
-void base64_to_bytes(const char* input, size_t input_len, uint8_t* output, size_t output_size) {
-    if (input_len % 4 != 0) return 0;
+int base64_to_bytes(const char* input, size_t input_len, uint8_t* output, size_t output_size) {
+    if (input_len % 4 != 0) return -1;
 
     size_t i = 0, j = 0;
 
@@ -92,22 +94,23 @@ void base64_to_bytes(const char* input, size_t input_len, uint8_t* output, size_
         int d = (input[i] != '=') ? base64_char_value(input[i]) : 0; i++;
 
         if (a < 0 || b < 0 || (input[i - 2] != '=' && c < 0) || (input[i - 1] != '=' && d < 0)) {
-            return 0; // invalid character
+            return -1; // invalid character
         }
 
         uint32_t triple = (a << 18) | (b << 12) | (c << 6) | d;
 
-        if (j + 1 > output_size) return 0;
+        if (j + 1 > output_size) return -1;
         output[j++] = (triple >> 16) & 0xFF;
 
         if (input[i - 2] != '=') {
-            if (j + 1 > output_size) return 0;
+            if (j + 1 > output_size) return -1;
             output[j++] = (triple >> 8) & 0xFF;
         }
 
         if (input[i - 1] != '=') {
-            if (j + 1 > output_size) return 0;
+            if (j + 1 > output_size) return -1;
             output[j++] = triple & 0xFF;
         }
     }
+    return 0; // success
 }

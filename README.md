@@ -2,7 +2,7 @@
 
 This library is **_Arduino and PlatformIO Compatible_**
 
-[![microsui-lib on Arduino Registry](https://img.shields.io/badge/Arduino-microsui--lib-blue.svg)](https://registry.arduino.cc/libraries/microsui-lib)
+[![microsui-lib on Arduino Registry](https://img.shields.io/badge/Arduino-microsui--lib-blue.svg)](https://www.ardu-badge.com/MicroSui)
 [![PlatformIO Registry](https://badges.registry.platformio.org/packages/gustavogb/library/microsui-lib.svg)](https://registry.platformio.org/libraries/gustavogb/microsui-lib)
 
 ## The Library:
@@ -25,7 +25,7 @@ microsui-lib/
 │   └── microsui/
 │       ├── sign.h
 │       ├── cryptography.h
-│       └── utils.h
+│       └── byte_conversions.h
 ├── src/                     # Library source files (.c)
 │   ├── lib/                 # Third-party dependencies
 │   │   ├── monocypher/
@@ -33,7 +33,7 @@ microsui-lib/
 │   │       └── c25519/
 │   ├── sign.c
 │   ├── cryptography.c
-│   ├── utils.c
+│   ├── byte_conversions.c
 │   └── MicroSui.h           # Arduino header (must be in src)
 ├── examples/                # Usage examples
 │   ├── ArduinoExamples/
@@ -53,7 +53,7 @@ microsui-lib/
   Core implementation of the message signing logic using `monocypher` and `compact25519`.
 - `cryptography.c`:  
   Core cryptographic utilities for encoding, decoding, key transformations, and other format-related operations, including Bech32 support.
-- `utils.c`:  
+- `byte_conversions.c`:  
   Useful complementary functions to be used by other library functions or by the user.
 
 ### 📂 Public Headers (`/include`)
@@ -62,7 +62,7 @@ microsui-lib/
   Public API header exposing the MicroSui Sign functions.
 - `microsui/cryptography.h`:  
   Public API header exposing the MicroSui Cryptography functions.
-- `microsui/utils.h`:  
+- `microsui/byte_conversions.h`:  
   Public API header exposing useful complementary functions.
 
 ### 📦 Dependencies (`/lib`)

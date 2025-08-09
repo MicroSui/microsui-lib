@@ -7,8 +7,8 @@ extern "C" {
 #endif
 
 #include "sign.h"
-#include "utils.h"
 #include "cryptography.h"
+#include "byte_conversions.h"
 
 #ifdef __cplusplus
 }
