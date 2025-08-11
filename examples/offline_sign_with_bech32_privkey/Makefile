@@ -1,5 +1,6 @@
 ROOT_DIR := ../..
 SRC := $(ROOT_DIR)/src
+UTILS := $(SRC)/utils
 INCLUDE := $(ROOT_DIR)/include
 LIB := $(ROOT_DIR)/src/lib
 
@@ -7,10 +8,11 @@ MONOCYPHER := $(LIB)/monocypher
 COMPACT := $(LIB)/compact25519
 C25519 := $(COMPACT)/c25519
 
-CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
+CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
 
 SOURCES := offline_sign_with_bech32_privkey.c constants.c \
            $(SRC)/*.c \
+           $(UTILS)/*.c \
            $(wildcard $(MONOCYPHER)/*.c) \
            $(wildcard $(COMPACT)/*.c) \
            $(wildcard $(C25519)/*.c)
