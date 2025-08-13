@@ -10,8 +10,11 @@
 #define SIGNATURE_BYTES_LENGTH 97
 #define SIGNATURE_B64_LENGTH 132 // 132 = (97 + 2) / 3 * 4
 
-#define MAX_LENGTH_SUI_MESSAGE 128000 // Maximum length for Sui message in bytes 128k
+#define MAX_LENGTH_SUI_MESSAGE 174636 // Maximum length for Sui message in bytes 128k (174764 bytes in base64 = 128kB)
 
+// Function to prepare the JSON for executing a Sui transaction block
+// This function takes a Sui signature and a Sui message, encodes them in Base64, and constructs a JSON-RPC request string
+// Documentation: https://docs.sui.io/sui-api-ref#sui_executetransactionblock
 char* microsui_prepare_executeTransactionBlock(const uint8_t sui_sig[97], const uint8_t* sui_msg, size_t sui_msg_len) {
     const char* execute_method = "sui_executeTransactionBlock";
 
@@ -23,7 +26,7 @@ char* microsui_prepare_executeTransactionBlock(const uint8_t sui_sig[97], const 
     // Prepare the Sui Signature for Base64 encoding
     char sign_base64[SIGNATURE_B64_LENGTH + 1]; // +1 for null terminator
     if (bytes_to_base64(sui_sig, SIGNATURE_BYTES_LENGTH, sign_base64, SIGNATURE_B64_LENGTH + 1) != 0) return NULL; // Base64 encoding failed
-    
+
     // Prepare the Sui Message for Base64 encoding
     size_t msg_base64_len = (sui_msg_len + 2) / 3 * 4;  //TODO Make function for calculate function of this
     char msg_base64[msg_base64_len + 1]; // +1 for null terminator
