@@ -1,4 +1,4 @@
-ROOT_DIR := ../..
+ROOT_DIR := ../../..
 SRC := $(ROOT_DIR)/src
 UTILS := $(SRC)/utils
 INCLUDE := $(ROOT_DIR)/include

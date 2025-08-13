@@ -1,4 +1,4 @@
-EXAMPLES_DIR := examples
+EXAMPLES_DIR := examples/core_examples
 EXAMPLE_DIRS := $(wildcard $(EXAMPLES_DIR)/*)
 OUTPUTS :=
 

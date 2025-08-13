@@ -1,4 +1,4 @@
-ROOT_DIR := ../..
+ROOT_DIR := ../../..
 SRC := $(ROOT_DIR)/src
 UTILS := $(SRC)/utils
 INCLUDE := $(ROOT_DIR)/include
@@ -10,14 +10,14 @@ C25519 := $(COMPACT)/c25519
 
 CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
 
-SOURCES := offline_sign.c constants.c \
+SOURCES := offline_sign_with_bech32_privkey.c constants.c \
            $(SRC)/*.c \
            $(UTILS)/*.c \
            $(wildcard $(MONOCYPHER)/*.c) \
            $(wildcard $(COMPACT)/*.c) \
            $(wildcard $(C25519)/*.c)
 
-OUTPUT := offline_sign.out
+OUTPUT := offline_sign_with_bech32_privkey.out
 
 all: clean_before_build $(OUTPUT)
 
