@@ -12,14 +12,14 @@ HTTP_LIBS = -lcurl $(if $(filter Windows_NT,$(OS)),-lws2_32 -lbcrypt -lwldap32 -
 
 CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
 
-SOURCES := prepare_transaction_json.c \
+SOURCES := prepare_and_send_transaction.c \
            $(SRC)/*.c \
            $(UTILS)/*.c \
            $(wildcard $(MONOCYPHER)/*.c) \
            $(wildcard $(COMPACT)/*.c) \
            $(wildcard $(C25519)/*.c)
 
-OUTPUT := prepare_transaction_json.out
+OUTPUT := prepare_and_send_transaction.out
 
 all: clean_before_build $(OUTPUT)
 
