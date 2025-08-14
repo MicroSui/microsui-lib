@@ -8,6 +8,8 @@ MONOCYPHER := $(LIB)/monocypher
 COMPACT := $(LIB)/compact25519
 C25519 := $(COMPACT)/c25519
 
+HTTP_LIBS = -lcurl $(if $(filter Windows_NT,$(OS)),-lws2_32 -lbcrypt -lwldap32 -lcrypt32)
+
 CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
 
 SOURCES := encode_conversions.c \
@@ -23,7 +25,7 @@ all: clean_before_build $(OUTPUT)
 
 $(OUTPUT): $(SOURCES)
 	@echo "Compiling example: $@"
-	gcc $(CFLAGS) $^ -o $@
+	gcc $(CFLAGS) $^ -o $@ $(HTTP_LIBS)
 
 .PHONY: clean clean_before_build
 

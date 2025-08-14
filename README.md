@@ -9,6 +9,30 @@ This library is **_Arduino and PlatformIO Compatible_**
 
 ### Build all the examples:
 
+#### Requirements:
+
+In Windows, macOS or Linux it will be necessary to install `cURL`:
+
+##### In Linux:
+
+```
+sudo apt install -y libcurl4-openssl-dev pkg-config build-essential
+```
+
+##### In macOS:
+
+```
+brew install curl pkg-config
+```
+
+##### In Windows:
+
+```
+pacman -S --needed mingw-w64-x86_64-gcc mingw-w64-x86_64-curl make
+```
+
+#### Compile and Build examples and tests
+
 In root, run
 
 ```bash
