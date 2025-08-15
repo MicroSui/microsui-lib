@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <HTTPClient.h>
-#include <NetworkClientSecure.h>
+#include <WiFiClientSecure.h>
 #include <WiFi.h>
 #include <WiFiMulti.h>
 
