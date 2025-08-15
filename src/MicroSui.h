@@ -11,6 +11,8 @@ extern "C" {
 #include "sign.h"
 #include "cryptography.h"
 #include "byte_conversions.h"
+#include "rpc_json_builder.h"
+#include "http_router.h"
 
 #ifdef __cplusplus
 }

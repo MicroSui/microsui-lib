@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "microsui/byte_conversions.h"
 #include "microsui/rpc_json_builder.h"
-#include "microsui/http.h"
+#include "microsui/http_router.h"
 
 // Sui Message and Signature in hex format
 const char* sui_message = "0000020008c0320a030000000000202e3d52393c9035afd1ef38abd7fce2dad71f0e276b522fb274f4e14d1df974720202000101000001010300000000010100d79a4c7a655aa80cf92069bbac9666705f1d7181ff9c2d59efbc7e6ec4c3379d0115bc7e3113dfaebc7bdb30676e56e6ff651365235b74a202cbb1e73f57eaeb78600fd0140000000020c00463b22a32bebcb028b264d61bfa963c3f6a82bd7487c52bec8b2bf0c0e373d79a4c7a655aa80cf92069bbac9666705f1d7181ff9c2d59efbc7e6ec4c3379de80300000000000040ab3c000000000000";
