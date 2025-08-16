@@ -33,9 +33,9 @@ void setClock() {
 
 int http_post(const char* host, const char* path, int port, const char* jsonBody, char* responseOut, size_t maxLen) {
   WiFi.mode(WIFI_STA);
-  WiFiMulti.addAP("Blueground1651", "showupstartliving");
+  WiFiMulti.addAP("iPhone", "123456789");
 
-  //Serial.print("Waiting for WiFi to connect...");
+  Serial.print("Waiting for WiFi to connect...");
   while ((WiFiMulti.run() != WL_CONNECTED)) {
     Serial.print(".");
     delay(500);
