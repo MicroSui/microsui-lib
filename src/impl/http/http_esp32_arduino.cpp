@@ -57,8 +57,7 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
     HTTPClient https;
     Serial.print("[HTTPS] begin...\n");
 
-    if (https.begin(*client,
-                    "https://fullnode.testnet.sui.io:443/")) {
+    if (https.begin(*client, "https://" + host + ":" + port + path)) {
       https.addHeader("Content-Type", "application/json");
 
       Serial.print("[HTTPS] POST...\n");
@@ -72,8 +71,7 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
           Serial.println(payload);
         }
       } else {
-        Serial.printf("[HTTPS] POST... failed, error: %s\n",
-                      https.errorToString(httpCode).c_str());
+        Serial.printf("[HTTPS] POST... failed, error: %s\n", https.errorToString(httpCode).c_str());
       }
 
       https.end();
