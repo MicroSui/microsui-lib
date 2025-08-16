@@ -30,11 +30,9 @@ void setClock() {
   Serial.print(asctime(&timeinfo));
 }
 
-
-int microsui_http_post(const char* host, const char* path, int port, const char* jsonBody, char* responseOut, size_t maxLen) {
+int microsui_connect_wifi(const char* ssid, const char* password) {
   WiFi.mode(WIFI_STA);
-  WiFiMulti.addAP("Blueground1651", "showupstartliving");
-
+  WiFiMulti.addAP(ssid, password);
 
   Serial.print("Waiting for WiFi to connect...");
   while ((WiFiMulti.run() != WL_CONNECTED)) {
@@ -42,7 +40,12 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
     delay(500);
   }
   Serial.println(" connected");
+  
+  return 0;
+}
 
+
+int microsui_http_post(const char* host, const char* path, int port, const char* jsonBody, char* responseOut, size_t maxLen) {
   //setClock();
 
   NetworkClientSecure *client = new NetworkClientSecure;

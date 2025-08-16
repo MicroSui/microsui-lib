@@ -10,4 +10,6 @@ int microsui_http_post(const char* host,
               char* responseOut,
               size_t maxLen);
 
+int microsui_connect_wifi(const char* ssid, const char* password);
+
 #endif
