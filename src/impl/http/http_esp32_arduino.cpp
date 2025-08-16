@@ -33,7 +33,8 @@ void setClock() {
 
 int microsui_http_post(const char* host, const char* path, int port, const char* jsonBody, char* responseOut, size_t maxLen) {
   WiFi.mode(WIFI_STA);
-  WiFiMulti.addAP("iPhone", "123456789");
+  WiFiMulti.addAP("Blueground1651", "showupstartliving");
+
 
   Serial.print("Waiting for WiFi to connect...");
   while ((WiFiMulti.run() != WL_CONNECTED)) {
