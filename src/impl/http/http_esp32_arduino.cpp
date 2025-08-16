@@ -1,5 +1,7 @@
+#if defined(ARDUINO) && defined(ARDUINO_ARCH_ESP32)
+
 extern "C" {
-    #include "http_router.h"
+#include "http_router.h"
 }
 #include <Arduino.h>
 #include <HTTPClient.h>
@@ -81,3 +83,5 @@ int http_post(const char* host, const char* path, int port, const char* jsonBody
   }
   return 0;
 }
+
+#endif

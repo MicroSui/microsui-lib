@@ -1,6 +1,8 @@
 // impl/http_post_posix.inc
 // POSIX (Linux/macOS/*BSD) using libcurl for HTTPS. No OpenSSL in your code.
 // Link with: -lcurl
+#if defined(ESP_PLATFORM) || defined(ARDUINO_ARCH_ESP32)
+
 
 #include <stdio.h>
 #include <string.h>
@@ -131,3 +133,5 @@ int http_post(const char* host,
     if (hb.len >= hb.cap) responseOut[hb.cap - 1] = '\0';
     return 0;
 }
+
+#endif
