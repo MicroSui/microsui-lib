@@ -58,7 +58,7 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
     Serial.print("[HTTPS] begin...\n");
 
     if (https.begin(*client,
-                    "https://fullnode.testnet.sui.io/:443")) {  // URL de ejemplo
+                    "https://fullnode.testnet.sui.io:443/")) {
       https.addHeader("Content-Type", "application/json");
 
       Serial.print("[HTTPS] POST...\n");
