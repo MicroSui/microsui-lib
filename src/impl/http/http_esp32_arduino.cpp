@@ -31,7 +31,7 @@ void setClock() {
 }
 
 
-int http_post(const char* host, const char* path, int port, const char* jsonBody, char* responseOut, size_t maxLen) {
+int microsui_http_post(const char* host, const char* path, int port, const char* jsonBody, char* responseOut, size_t maxLen) {
   WiFi.mode(WIFI_STA);
   WiFiMulti.addAP("iPhone", "123456789");
 

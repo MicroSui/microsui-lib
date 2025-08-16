@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-int http_post(const char* host,
+int microsui_http_post(const char* host,
               const char* path,
               int port,
               const char* jsonBody,

@@ -1,6 +1,4 @@
 #if defined(_WIN32) || defined(__linux__) || defined(__APPLE__) || defined(__unix__)
-// impl/http_post_posix.inc
-// POSIX (Linux/macOS/*BSD) using libcurl for HTTPS. No OpenSSL in your code.
 // Link with: -lcurl
 
 #include <stdio.h>
@@ -42,7 +40,7 @@ static size_t http_write_cb(char* ptr, size_t size, size_t nmemb, void* userdata
 
 // Returns 0 on success; <0 on error.
 // Writes only the HTTP body to `responseOut` (null-terminated). Truncates if needed.
-int http_post(const char* host,
+int microsui_http_post(const char* host,
               const char* path,
               int         port,
               const char* jsonBody,

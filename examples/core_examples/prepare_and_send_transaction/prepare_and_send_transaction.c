@@ -43,7 +43,7 @@ int main() {
     // Send the JSON via HTTP POST request
     printf("\t Sending HTTP POST request to %s:%d%s\n", host, port, path);
     char response[4096];   // buffer to store response
-    int rc = http_post(host, path, port, json, response, sizeof(response));
+    int rc = microsui_http_post(host, path, port, json, response, sizeof(response));
 
     if (rc == 0) {
         printf("HTTP POST success!\n");
