@@ -57,7 +57,8 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
     HTTPClient https;
     Serial.print("[HTTPS] begin...\n");
 
-    if (https.begin(*client, "https://" + host + ":" + port + path)) {
+    String url = "https://" + String(host) + ":" + String(port) + String(path);
+    if (https.begin(*client, url)) {
       https.addHeader("Content-Type", "application/json");
 
       Serial.print("[HTTPS] POST...\n");
