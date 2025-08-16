@@ -8,6 +8,7 @@ MONOCYPHER := $(LIB)/monocypher
 COMPACT := $(LIB)/compact25519
 C25519 := $(COMPACT)/c25519
 
+HTTP_CURL_FILE = $(SRC)/impl/http/http_curl.c # This Makefile needs cURL installed in the system
 HTTP_LIBS = -lcurl $(if $(filter Windows_NT,$(OS)),-lws2_32 -lbcrypt -lwldap32 -lcrypt32)
 
 CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
@@ -17,7 +18,8 @@ SOURCES := prepare_and_send_transaction.c \
            $(UTILS)/*.c \
            $(wildcard $(MONOCYPHER)/*.c) \
            $(wildcard $(COMPACT)/*.c) \
-           $(wildcard $(C25519)/*.c)
+           $(wildcard $(C25519)/*.c) \
+		   $(HTTP_CURL_FILE)
 
 OUTPUT := prepare_and_send_transaction.out
 

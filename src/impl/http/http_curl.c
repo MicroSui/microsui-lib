@@ -1,8 +1,7 @@
+#if defined(_WIN32) || defined(__linux__) || defined(__APPLE__) || defined(__unix__)
 // impl/http_post_posix.inc
 // POSIX (Linux/macOS/*BSD) using libcurl for HTTPS. No OpenSSL in your code.
 // Link with: -lcurl
-#if defined(ESP_PLATFORM) || defined(ARDUINO_ARCH_ESP32)
-
 
 #include <stdio.h>
 #include <string.h>
