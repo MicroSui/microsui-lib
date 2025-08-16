@@ -3,11 +3,19 @@
 
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int http_post(const char* host,
               const char* path,
               int port,
               const char* jsonBody,
               char* responseOut,
               size_t maxLen);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
