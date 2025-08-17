@@ -69,6 +69,9 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
                     String payload = https.getString();
                     //Serial.println(payload);
 
+                    Serial.println("before assign");
+                    Serial.println(payload.c_str());
+
                     // Prepare the JSON-RPC request string - Using a StringBuilder for efficient string concatenation
                     StringBuilder sb;
                     if (!sb_init(&sb, 1600, 10000)) {
@@ -77,11 +80,19 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
 
                     // Append the response to the StringBuilder
                     sb_append(&sb, payload.c_str());
+                    Serial.println(payload);
+
 
                     responseOut = sb_detach(&sb);
 
+                    Serial.println("after assign");
+                    Serial.println(payload.c_str());
+
                     https.end();
                     delete client;
+
+                    Serial.println("after delete_clinet");
+                    Serial.println(payload.c_str());
 
                     return 0;
                 }
