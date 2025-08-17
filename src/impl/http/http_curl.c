@@ -1,5 +1,5 @@
 #if defined(_WIN32) || defined(__linux__) || defined(__APPLE__) || defined(__unix__)
-// Link with: -lcurl
+// Compile & link with: -lcurl
 
 #include <stdio.h>
 #include <string.h>
@@ -15,71 +15,97 @@
 #define HTTP_POST_TOTAL_TIMEOUT_SEC  15L
 #endif
 
-// Internal write buffer for libcurl callback
+// Dynamic buffer used by libcurl write callback
 typedef struct {
-    char*  out;      // user buffer
-    size_t cap;      // capacity (maxLen)
-    size_t len;      // current length
-} http_buf_t;
+    char*  data;
+    size_t len;
+    size_t cap;
+} dynbuf_t;
 
+// Grow-on-demand write callback: appends to dynbuf and keeps it NUL-terminated.
+// On OOM, returns 0 so libcurl aborts with CURLE_WRITE_ERROR.
 static size_t http_write_cb(char* ptr, size_t size, size_t nmemb, void* userdata) {
-    http_buf_t* hb = (http_buf_t*)userdata;
+    dynbuf_t* db = (dynbuf_t*)userdata;
     size_t n = size * nmemb;
+    if (n == 0) return 0;
 
-    if (hb->len >= hb->cap) return n; // already full; discard
-    size_t free_space = (hb->cap > hb->len) ? (hb->cap - hb->len - 1) : 0; // leave room for '\0'
-    if (n > free_space) n = free_space;
-
-    if (n > 0) {
-        memcpy(hb->out + hb->len, ptr, n);
-        hb->len += n;
-        hb->out[hb->len] = '\0';
+    // Ensure capacity (keep 1 byte for the trailing '\0')
+    if (db->len + n + 1 > db->cap) {
+        size_t needed = db->len + n + 1;
+        size_t newcap = db->cap ? db->cap : 4096;
+        while (newcap < needed) {
+            size_t prev = newcap;
+            newcap *= 2;               // exponential growth to reduce reallocs
+            if (newcap < prev) {       // overflow guard (very unlikely)
+                newcap = needed;
+                break;
+            }
+        }
+        char* p = (char*)realloc(db->data, newcap);
+        if (!p) {
+            return 0; // force libcurl to error out
+        }
+        db->data = p;
+        db->cap  = newcap;
     }
-    return size * nmemb; // tell curl we "handled" all bytes (even if truncated)
+
+    memcpy(db->data + db->len, ptr, n);
+    db->len += n;
+    db->data[db->len] = '\0';
+    return n; // bytes consumed
 }
 
-// Returns 0 on success; <0 on error.
-// Writes only the HTTP body to `responseOut` (null-terminated). Truncates if needed.
-int microsui_http_post(const char* host,
-              const char* path,
-              int         port,
-              const char* jsonBody,
-              char*       responseOut,
-              size_t      maxLen)
+/**
+ * Performs HTTP/HTTPS POST and returns the response BODY as a NUL-terminated C string.
+ *
+ * Success: returns malloc/realloc'd buffer (caller must free()).
+ * Error (transport/memory/etc.): returns NULL.
+ *
+ * Notes:
+ *  - If server returns 4xx/5xx, this still returns the body (API has no status out-param).
+ *  - Scheme: "http" if port == 80, otherwise "https".
+ *  - If port is not 80/443, ":port" is included in the URL.
+ */
+char* microsui_http_post(const char* host,
+                         const char* path,
+                         int         port,
+                         const char* jsonBody)
 {
-    if (!host || !path || !jsonBody || !responseOut || maxLen == 0) return -100;
-    responseOut[0] = '\0';
+    if (!host || !path || !jsonBody) return NULL;
 
-    // Build full URL: https://host[:port]/path
-    // Path is expected to start with '/', but we handle both cases defensively
+    // Build URL: http(s)://host[:port]/path
     char url[1024];
     const char* scheme = (port == 80) ? "http" : "https";
+    int r;
     if (port == 80 || port == 443) {
-        snprintf(url, sizeof(url), "%s://%s%s%s",
-                 scheme, host, (path[0] == '/' ? "" : "/"), path);
+        r = snprintf(url, sizeof(url), "%s://%s%s%s",
+                     scheme, host, (path[0] == '/' ? "" : "/"), path);
     } else {
-        snprintf(url, sizeof(url), "%s://%s:%d%s%s",
-                 scheme, host, port, (path[0] == '/' ? "" : "/"), path);
+        r = snprintf(url, sizeof(url), "%s://%s:%d%s%s",
+                     scheme, host, port, (path[0] == '/' ? "" : "/"), path);
+    }
+    if (r < 0 || r >= (int)sizeof(url)) {
+        return NULL; // URL truncated or formatting error
     }
 
+    // One-time global init
     CURLcode rc;
     static int curl_inited = 0;
     if (!curl_inited) {
         rc = curl_global_init(CURL_GLOBAL_DEFAULT);
-        if (rc != CURLE_OK) return -101;
+        if (rc != CURLE_OK) return NULL;
         curl_inited = 1;
     }
 
     CURL* curl = curl_easy_init();
-    if (!curl) return -102;
+    if (!curl) return NULL;
 
-    // Prepare headers
+    // Headers
     struct curl_slist* headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
 
-    // Output buffer setup
-    http_buf_t hb = { .out = responseOut, .cap = maxLen, .len = 0 };
-    responseOut[0] = '\0';
+    // Dynamic response buffer
+    dynbuf_t db = {0}; // data=NULL, len=0, cap=0
 
     // Basic options
     curl_easy_setopt(curl, CURLOPT_URL, url);
@@ -92,43 +118,36 @@ int microsui_http_post(const char* host,
     curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, HTTP_POST_CONNECT_TIMEOUT_SEC);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT,        HTTP_POST_TOTAL_TIMEOUT_SEC);
 
-    // HTTPS verification ON by default (good for prod). If you need to disable:
+    // HTTPS verification is ON by default (recommended).
+    // To disable (NOT recommended in production):
     // curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
     // curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-    // Write callback to capture only the body
+    // Capture only the body
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, http_write_cb);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &hb);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &db);
 
-    // (Optional) Force HTTP/1.1 to avoid chunking quirks:
-    // curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_1_1);
+    // Optional: avoid signals on POSIX/multi-threaded apps
+    // curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
 
     rc = curl_easy_perform(curl);
-
-    long http_code = 0;
-    if (rc == CURLE_OK) {
-        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    }
 
     curl_slist_free_all(headers);
     curl_easy_cleanup(curl);
 
     if (rc != CURLE_OK) {
-        // map some common curl errors
-        switch (rc) {
-            case CURLE_COULDNT_RESOLVE_HOST: return -103;
-            case CURLE_COULDNT_CONNECT:      return -104;
-            case CURLE_OPERATION_TIMEDOUT:   return -105;
-            default:                         return -106;
-        }
+        if (db.data) free(db.data);
+        return NULL;
     }
 
-    // Treat non-2xx as error if you want (optional). Here we just return 0.
-    // if (http_code < 200 || http_code >= 300) return -107;
+    // Ensure we always return a valid buffer (even if empty)
+    if (!db.data) {
+        db.data = (char*)malloc(1);
+        if (!db.data) return NULL;
+        db.data[0] = '\0';
+    }
 
-    // Ensure null-termination
-    if (hb.len >= hb.cap) responseOut[hb.cap - 1] = '\0';
-    return 0;
+    return db.data; // caller must free(ptr)
 }
 
-#endif
+#endif // desktop platforms

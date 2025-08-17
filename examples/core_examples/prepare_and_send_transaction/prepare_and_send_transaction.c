@@ -42,17 +42,17 @@ int main() {
 
     // Send the JSON via HTTP POST request
     printf("\t Sending HTTP POST request to %s:%d%s\n", host, port, path);
-    char response[4096];   // buffer to store response
-    int rc = microsui_http_post(host, path, port, json, response, sizeof(response));
+    char* response = microsui_http_post(host, path, port, json);
 
-    if (rc == 0) {
+    if (response != NULL) {
         printf("HTTP POST success!\n");
         printf("\n\t Sui Network RPC Response:\n%s\n", response);
     } else {
-        printf("\n HTTP POST failed with code %d\n", rc);
+        printf("\n HTTP POST failed\n");
     }
 
     free(json); // Free the JSON string after use (very important to avoid memory leaks)
+    free(response); // Free the response string after use (very important to avoid memory leaks)
 
     return 0;
 }
