@@ -2,7 +2,6 @@
 
 extern "C" {
 #include "http_router.h"
-#include "string_builder.h"
 }
 #include <Arduino.h>
 #include <HTTPClient.h>
