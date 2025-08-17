@@ -78,8 +78,12 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
                         return -1;
                     }
 
+                    char buffer[10000];
+                    strncpy(buffer, payload.c_str(), sizeof(buffer));
+                    buffer[sizeof(buffer)-1] = '\0';  
+
                     // Append the response to the StringBuilder
-                    sb_append(&sb, payload.c_str());
+                    sb_append(&sb, buffer);
                     Serial.println(payload);
 
 
