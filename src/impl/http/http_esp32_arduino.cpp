@@ -45,7 +45,7 @@ int microsui_connect_wifi(const char* ssid, const char* password) {
 }
 
 
-int microsui_http_post(const char* host, const char* path, int port, const char* jsonBody, char* responseOut, size_t maxLen) {
+int microsui_http_post(const char* host, const char* path, int port, const char* jsonBody, char** responseOut) {
     //setClock(); // Uncomment this line if you want to set the clock using NTP
 
     NetworkClientSecure *client = new NetworkClientSecure;
@@ -69,41 +69,18 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
                     String payload = https.getString();
                     //Serial.println(payload);
 
-                    Serial.println("before assign");
-                    Serial.println(payload.c_str());
-
-                    // Prepare the JSON-RPC request string - Using a StringBuilder for efficient string concatenation
-                    StringBuilder sb;
-                    if (!sb_init(&sb, 1600, 10000)) {
-                        return -1;
+                    // Allocate memory for the response
+                    size_t L = payload.length();
+                    char* buf = (char*)malloc(L + 1);
+                    if (!buf) {
+                        return -5; // No enough memory
                     }
+                    memcpy(buf, payload.c_str(), L + 1); // copy the string including the null terminator
 
-                    char buffer[10000];
-                    strncpy(buffer, payload.c_str(), sizeof(buffer));
-                    buffer[sizeof(buffer)-1] = '\0';  
-
-                    // Append the response to the StringBuilder
-                    sb_append(&sb, buffer);
-                    Serial.println(payload);
-
-
-                    responseOut = sb_detach(&sb);
-
-                    Serial.println("after assign");
-                    Serial.println(payload.c_str());
+                    *responseOut = buf;
 
                     https.end();
                     delete client;
-
-                    Serial.println("after delete_clinet");
-                    Serial.println(payload.c_str());
-                    Serial.println(strlen(payload.c_str()));
-
-
-                    Serial.println("y si leemos el responseOut??");
-                    Serial.println(responseOut);
-                    Serial.println(strlen(responseOut));
-
 
                     return 0;
                 }
