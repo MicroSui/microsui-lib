@@ -45,7 +45,7 @@ int microsui_connect_wifi(const char* ssid, const char* password) {
 }
 
 
-int microsui_http_post(const char* host, const char* path, int port, const char* jsonBody, char** responseOut) {
+char* microsui_http_post(const char* host, const char* path, int port, const char* jsonBody) {
     //setClock(); // Uncomment this line if you want to set the clock using NTP
 
     NetworkClientSecure *client = new NetworkClientSecure;
@@ -67,22 +67,20 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
                 Serial.printf("[HTTPS] POST... code: %d\n", httpCode);
                 if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_CREATED) {
                     String payload = https.getString();
-                    //Serial.println(payload);
 
                     // Allocate memory for the response
                     size_t L = payload.length();
                     char* buf = (char*)malloc(L + 1);
                     if (!buf) {
-                        return -5; // No enough memory
+                        return NULL; // No enough memory
                     }
-                    memcpy(buf, payload.c_str(), L + 1); // copy the string including the null terminator
-
-                    *responseOut = buf;
+                    memcpy(buf, payload.c_str(), L);
+                    buf[L] = '\0';
 
                     https.end();
                     delete client;
 
-                    return 0;
+                    return buf;
                 }
             } else {
                 Serial.printf("[HTTPS] POST... failed, error: %s\n", https.errorToString(httpCode).c_str());
@@ -95,7 +93,7 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
     } else {
         Serial.println("Unable to create client");
     }
-    return -1; // Default error case
+    return NULL; // Default error case
 }
 
 #endif
