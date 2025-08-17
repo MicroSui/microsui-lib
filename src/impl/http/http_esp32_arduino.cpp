@@ -93,6 +93,13 @@ int microsui_http_post(const char* host, const char* path, int port, const char*
 
                     Serial.println("after delete_clinet");
                     Serial.println(payload.c_str());
+                    Serial.println(strlen(payload.c_str()));
+
+
+                    Serial.println("y si leemos el responseOut??");
+                    Serial.println(responseOut);
+                    Serial.println(strlen(responseOut));
+
 
                     return 0;
                 }
