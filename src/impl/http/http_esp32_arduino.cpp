@@ -2,7 +2,7 @@
 
 extern "C" {
 #include "http_router.h"
-#include "rpc_json_builder.h"
+#include "string_builder.h"
 }
 #include <Arduino.h>
 #include <HTTPClient.h>
