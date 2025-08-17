@@ -66,11 +66,7 @@ static size_t http_write_cb(char* ptr, size_t size, size_t nmemb, void* userdata
  *  - Scheme: "http" if port == 80, otherwise "https".
  *  - If port is not 80/443, ":port" is included in the URL.
  */
-char* microsui_http_post(const char* host,
-                         const char* path,
-                         int         port,
-                         const char* jsonBody)
-{
+char* microsui_http_post(const char* host, const char* path, int port, const char* jsonBody) {
     if (!host || !path || !jsonBody) return NULL;
 
     // Build URL: http(s)://host[:port]/path
