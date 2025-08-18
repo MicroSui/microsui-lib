@@ -1,9 +1,11 @@
-
 #include "http_router.h"
 
 #if !HTTP_SUPPORTED_PLATFORMS
 #include <errno.h>
 #include <stdio.h>
+
+#pragma message("MicroSui notice: HTTP support isn't available on this platform/board yet. Your build will still compile; any call to MicroSui HTTP functions will simply return NULL. If you need MicroSui HTTP functions here, you can add a small adapter for your board to the `microsui-lib`.")
+
 
 char* microsui_http_post(const char* host,
                          const char* path,

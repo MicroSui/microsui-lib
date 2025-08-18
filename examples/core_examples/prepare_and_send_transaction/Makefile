@@ -9,17 +9,22 @@ COMPACT := $(LIB)/compact25519
 C25519 := $(COMPACT)/c25519
 
 HTTP_CURL_FILE = $(SRC)/impl/http/http_curl.c # This Makefile needs cURL installed in the system
+HTTP_UNSUPPORTED_FILE = $(SRC)/impl/http/http_unsupported.c # This file is used when make is made on a system without cURL support
+WIFI_UNSUPPORTED_FILE = $(SRC)/impl/wifi/wifi_unsupported.c
+
 HTTP_LIBS = -lcurl $(if $(filter Windows_NT,$(OS)),-lws2_32 -lbcrypt -lwldap32 -lcrypt32)
 
 CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
 
 SOURCES := prepare_and_send_transaction.c \
-           $(SRC)/*.c \
-           $(UTILS)/*.c \
-           $(wildcard $(MONOCYPHER)/*.c) \
-           $(wildcard $(COMPACT)/*.c) \
-           $(wildcard $(C25519)/*.c) \
-		   $(HTTP_CURL_FILE)
+			$(SRC)/*.c \
+			$(UTILS)/*.c \
+			$(wildcard $(MONOCYPHER)/*.c) \
+			$(wildcard $(COMPACT)/*.c) \
+			$(wildcard $(C25519)/*.c) \
+			$(HTTP_CURL_FILE) \
+			$(HTTP_UNSUPPORTED_FILE) \
+			$(WIFI_UNSUPPORTED_FILE)
 
 OUTPUT := prepare_and_send_transaction.out
 

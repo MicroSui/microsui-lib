@@ -1,7 +1,9 @@
-
 #include "wifi_router.h"
 
 #if !WIFI_SUPPORTED_PLATFORMS
+
+#pragma message("MicroSui notice: WiFi support isn't available on this platform/board yet. Your build will still compile; any call to MicroSui WiFi functions will simply return NULL. If you need MicroSui WiFi functions here, you can add a small adapter for your board to the `microsui-lib`.")
+
 #include <errno.h>
 #include <stdio.h>
 
@@ -20,8 +22,7 @@ int microsui_connect_wifi(const char* ssid, const char* password)
     }
 
     errno = ENOSYS; /* Not implemented */
-    return NULL;
+    return -1;
 }
-
 
 #endif
