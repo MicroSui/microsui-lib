@@ -5,11 +5,6 @@ extern "C" {
 }
 #include <Arduino.h>
 #include <HTTPClient.h>
-#include <WiFiClientSecure.h>
-#include <WiFi.h>
-#include <WiFiMulti.h>
-
-WiFiMulti WiFiMulti;
 
 void setClock() {
     configTime(0, 0, "pool.ntp.org");
@@ -29,21 +24,6 @@ void setClock() {
     Serial.print(F("Current time: "));
     Serial.print(asctime(&timeinfo));
 }
-
-int microsui_connect_wifi(const char* ssid, const char* password) {
-    WiFi.mode(WIFI_STA);
-    WiFiMulti.addAP(ssid, password);
-
-    Serial.print("Waiting for WiFi to connect...");
-    while ((WiFiMulti.run() != WL_CONNECTED)) {
-        Serial.print(".");
-        delay(500);
-    }
-    Serial.println(" connected");
-    
-    return 0;
-}
-
 
 char* microsui_http_post(const char* host, const char* path, int port, const char* jsonBody) {
     //setClock(); // Uncomment this line if you want to set the clock using NTP
