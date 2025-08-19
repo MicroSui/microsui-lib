@@ -13,6 +13,7 @@ extern "C" {
 #include "byte_conversions.h"
 #include "rpc_json_builder.h"
 #include "http_router.h"
+#include "wifi_router.h"
 
 #ifdef __cplusplus
 }
