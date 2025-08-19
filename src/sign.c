@@ -1,8 +1,10 @@
+#include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <errno.h>
 #include "byte_conversions.h"
 #include "lib/monocypher/monocypher.h"
 #include "lib/compact25519/compact_ed25519.h"
@@ -48,4 +50,28 @@ int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const siz
     memcpy(sui_sig + 65, public_key, 32);
 
     return 0;
+}
+
+int microsui_sign(uint8_t scheme, uint8_t sui_sig[97], const uint8_t* message, const size_t message_len, const uint8_t private_key[32]) {
+    switch (scheme) {
+        case 0x00: // Pure Ed25519
+            return microsui_sign_ed25519(sui_sig, message, message_len, private_key);
+        case 0x01: // ECDSA Secp256k1
+            fprintf(stderr, "Error: ECDSA Secp256k1 signing is not implemented yet in MicroSui.\n");
+            return -1; // Not implemented
+        case 0x02: // ECDSA Secp256r1
+            fprintf(stderr, "Error: ECDSA Secp256r1 signing is not implemented yet in MicroSui.\n");
+            return -1; // Not implemented
+        case 0x03: // multisig
+            fprintf(stderr, "Error: Multisig signing is not implemented yet in MicroSui.\n");
+            return -1; // Not implemented
+        case 0x05: // zkLogin
+            fprintf(stderr, "Error: zkLogin signing is not implemented yet in MicroSui.\n");
+            return -1; // Not implemented
+        case 0x06: // passkey
+            fprintf(stderr, "Error: Passkey signing is not implemented yet in MicroSui.\n");
+            return -1; // Not implemented
+        default:
+            return -1; // Unsupported scheme
+    }
 }
