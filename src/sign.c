@@ -7,7 +7,7 @@
 #include "lib/monocypher/monocypher.h"
 #include "lib/compact25519/compact_ed25519.h"
 
-size_t build_message_with_intent(uint8_t *tx_bytes, size_t tx_len, uint8_t *output) {
+size_t build_message_with_intent(const uint8_t *tx_bytes, const size_t tx_len, uint8_t *output) {
     size_t offset = 0;
 
     // Setting Intent
@@ -22,12 +22,8 @@ size_t build_message_with_intent(uint8_t *tx_bytes, size_t tx_len, uint8_t *outp
     return offset; // Total length of messageWithIntent
 }
 
-int microsui_sign_message(uint8_t sui_sig[97], const char* message_hex, const uint8_t private_key[32]) {
-    // 1. Convert the HEX message to binary bytes
-    size_t msg_len = strlen(message_hex) / 2;  // 2 hex chars = 1 byte
-    uint8_t* message = (uint8_t*)malloc(msg_len);
-    hex_to_bytes(message_hex, message, msg_len);
-
+int microsui_sign_message(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len, const uint8_t private_key[32]) {
+    // 1. Copy private key to a local variable
     uint8_t private_key_cp[32];
     memcpy(private_key_cp, private_key, 32);
 
@@ -38,7 +34,7 @@ int microsui_sign_message(uint8_t sui_sig[97], const char* message_hex, const ui
 
     // 3. Generate digest using BLAKE2b with the message whit the intent
     uint8_t message_with_intent[512];
-    uint8_t message_with_intent_len = build_message_with_intent(message, msg_len, message_with_intent);
+    uint8_t message_with_intent_len = build_message_with_intent(message, message_len, message_with_intent);
     uint8_t digest[32];
     crypto_blake2b(digest, 32, message_with_intent, message_with_intent_len);
 
@@ -51,6 +47,5 @@ int microsui_sign_message(uint8_t sui_sig[97], const char* message_hex, const ui
     memcpy(sui_sig + 1, ed25519_signature, 64);
     memcpy(sui_sig + 65, public_key, 32);
 
-    free(message);
     return 0;
 }
