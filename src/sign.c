@@ -22,7 +22,7 @@ size_t build_message_with_intent(const uint8_t *tx_bytes, const size_t tx_len, u
     return offset; // Total length of messageWithIntent
 }
 
-int microsui_sign_message(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len, const uint8_t private_key[32]) {
+int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len, const uint8_t private_key[32]) {
     // 1. Copy private key to a local variable
     uint8_t private_key_cp[32];
     memcpy(private_key_cp, private_key, 32);

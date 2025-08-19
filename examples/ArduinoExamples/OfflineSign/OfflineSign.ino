@@ -43,7 +43,7 @@ void setup() {
 
   uint8_t sui_sig_1[97];
   // We obtain the signature here
-  microsui_sign_message(sui_sig_1, message, message_len, private_key_1);
+  microsui_sign_ed25519(sui_sig_1, message, message_len, private_key_1);
 
   char sui_sig_hex_1[195];
   // This MicroSui function makes an array hexa into a string for a better visualization (not needed if not printed)
@@ -65,7 +65,7 @@ void setup() {
 
   uint8_t sui_sig_2[97];
   // We obtain the signature here
-  microsui_sign_message(sui_sig_2, message, message_len, private_key_2_hexa);
+  microsui_sign_ed25519(sui_sig_2, message, message_len, private_key_2_hexa);
 
   char sui_sig_hex_2[195];
   // This MicroSui function makes an array hexa into a string for a better visualization (not needed if not printed)
