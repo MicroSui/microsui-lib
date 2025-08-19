@@ -22,7 +22,7 @@ SOURCES := prepare_and_send_transaction.c \
 			$(wildcard $(COMPACT)/*.c) \
 			$(wildcard $(C25519)/*.c) \
 			$(HTTP_CURL_FILE) \
-			$(HTTP_UNSUPPORTED_FILE) \
+			$(HTTP_UNSUPPORTED_FILE)
 
 OUTPUT := prepare_and_send_transaction.out
 
