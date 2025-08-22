@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "cryptography.h"
+#include "lib/monocypher/monocypher.h"
+
+
 static const char ALPHABET[] = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
 
 static const int8_t ALPHABET_MAP[128] = {
@@ -16,8 +20,6 @@ static const int8_t ALPHABET_MAP[128] = {
     ['c'] = 24, ['e'] = 25, ['6'] = 26, ['m'] = 27,
     ['u'] = 28, ['a'] = 29, ['7'] = 30, ['l'] = 31
 };
-
-static const size_t PK_BECH32_LEN = 70; // Length of Sui private key in Bech32 format
 
 #define TOLOWER(c)  ( ((unsigned char)(c) >= 'A' && (unsigned char)(c) <= 'Z') \
                           ? ((unsigned char)(c) + ('a' - 'A'))                   \
@@ -193,5 +195,33 @@ int microsui_encode_sui_privkey(const uint8_t *privkey_bytes, char *privkey_bech
         privkey_bech_output[idx++] = ALPHABET[checksum[i]];
     }
     privkey_bech_output[idx] = '\0'; // null-terminator
+    return 0;
+}
+
+int microsui_pubkey_to_sui_address(const uint8_t pubkey[32], uint8_t sui_address_out[32]) {
+    if (!pubkey || !sui_address_out) return -1;
+
+    uint8_t input[33];
+    input[0] = 0x00; // flag de esquema: Ed25519
+    memcpy(input + 1, pubkey, 32);
+
+    // Monocypher: hash_size = 32, msg = input (33 bytes)
+    crypto_blake2b(sui_address_out, 32, input, 33);
+
+    return 0;
+}
+
+
+int get_public_key_from_private_key(const uint8_t private_key[32], uint8_t public_key[32]) {
+    if (private_key == NULL || public_key == NULL) return -1;
+
+    // Copy private key to a local variable
+    uint8_t private_key_cp[32];
+    memcpy(private_key_cp, private_key, 32);
+
+    // Generate public key from private key using Ed25519
+    uint8_t secret_key[64];
+    crypto_ed25519_key_pair(secret_key, public_key, private_key_cp);
+    
     return 0;
 }
