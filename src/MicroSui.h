@@ -8,6 +8,12 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+
+// OO-style headers
+#include "Keypair.h"
+#include "Transaction.h"
+
+// General headers
 #include "sign.h"
 #include "cryptography.h"
 #include "byte_conversions.h"
