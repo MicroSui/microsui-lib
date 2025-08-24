@@ -16,7 +16,7 @@
 typedef struct TransactionBytes TransactionBytes;
 
 struct TransactionBytes {
-    uint8_t* bytes;     // Placeholder for transaction bytes
+    uint8_t* data;     // Placeholder for transaction bytes data
     size_t length;      // Length of the transaction bytes
 };
 
@@ -51,7 +51,7 @@ MicroSuiTransaction SuiTransaction_init() {
     memset(&tx, 0, sizeof(tx));
 
     // Initialize the transaction bytes to an empty state
-    tx.tx_bytes.bytes = NULL;
+    tx.tx_bytes.data = NULL;
     tx.tx_bytes.length = 0;
 
     // Assign methods
@@ -66,7 +66,7 @@ MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString)
 
     if (txBytesString == NULL || strlen(txBytesString) == 0) {
         // If the provided string is empty, return an empty transaction
-        tx.tx_bytes.bytes = NULL;
+        tx.tx_bytes.data = NULL;
         tx.tx_bytes.length = 0;
         return tx;
     }
@@ -77,7 +77,7 @@ MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString)
     hex_to_bytes(txBytesString, message, message_len);
 
     // Initialize the transaction bytes with the provided bytes
-    tx.tx_bytes.bytes = message;
+    tx.tx_bytes.data = message;
     tx.tx_bytes.length = message_len;
 
 
@@ -93,5 +93,5 @@ MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString)
 static const uint8_t* ms_build_impl(MicroSuiTransaction *self) {
     // TODO: Implement the logic to build the transaction bytes
 
-    return self->tx_bytes.bytes; 
+    return self->tx_bytes.data;
 }

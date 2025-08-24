@@ -13,7 +13,7 @@
 typedef struct TransactionBytes TransactionBytes;
 
 struct TransactionBytes {
-    uint8_t* bytes;     // Placeholder for transaction bytes
+    uint8_t* data;     // Placeholder for transaction bytes data
     size_t length;      // Length of the transaction bytes
 };
 

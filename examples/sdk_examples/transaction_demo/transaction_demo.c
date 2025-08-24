@@ -17,7 +17,7 @@ int main(void) {
 
     // Printing values
     printf("\n\tTransaction1 Bytes:\n");
-    const uint8_t* tx_bytes = tx.tx_bytes.bytes;
+    const uint8_t* tx_bytes = tx.tx_bytes.data;
     size_t tx_length = tx.tx_bytes.length;
     printf("\t\t Transaction1 Bytes Length: %zu\n", tx_length);
     printf("\t\t Transaction1 Bytes: ");
