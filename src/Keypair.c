@@ -14,17 +14,6 @@
 #include "byte_conversions.h"
 
 // ==========================
-// Standard error codes
-// ==========================
-typedef enum {
-    MS_OK        = 0,
-    MS_ERR_ARGS  = -1,
-    MS_ERR_SIZE  = -2,
-    MS_ERR_CRYPTO= -3,
-    MS_ERR_IO    = -4,
-} ms_err_t;
-
-// ==========================
 // Main struct declaration
 // ==========================
 typedef struct MicroSuiEd25519 MicroSuiEd25519;
@@ -151,19 +140,3 @@ static const char* ms_toSuiAddress_impl(MicroSuiEd25519 *self) {
     
     return sui_address; // placeholder
 }
-
-// ==========================
-// Example usage (commented)
-// ==========================
-/*
-int main(void) {
-    MicroSuiEd25519 keypair1 = generate();
-    MicroSuiEd25519 keypair2 = fromSecretKey("suiprivkey1...");
-
-    const char* sig = keypair1.signTransaction(&keypair1, "messageToSign");
-    const char* sk  = keypair1.getSecretKey(&keypair1);
-    const char* addr= keypair1.toSuiAddress(&keypair1);
-
-    return 0;
-}
-*/
