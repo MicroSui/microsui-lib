@@ -13,7 +13,7 @@
 typedef struct TransactionBytes TransactionBytes;
 
 struct TransactionBytes {
-    uint8_t* data;     // Placeholder for transaction bytes data
+    uint8_t* data;      // Placeholder for transaction bytes data
     size_t length;      // Length of the transaction bytes
 };
 
@@ -26,7 +26,7 @@ struct MicroSuiTransaction {
     TransactionBytes tx_bytes; // Transaction bytes
 
     // OO-style methods
-    const uint8_t* (*build)(MicroSuiTransaction *self);
+    TransactionBytes (*build)(MicroSuiTransaction *self);
 };
 
 // ==========================
