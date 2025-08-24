@@ -14,6 +14,15 @@
 #include "byte_conversions.h"
 
 // ==========================
+// Transaction general structs and constants
+// ==========================
+typedef struct {
+    uint8_t bytes[97];      // Placeholder for the signature in bytes format
+    char signature[133];    // Placeholder for the signature in base64 format (132 + null terminator)
+} SuiSignature;
+
+
+// ==========================
 // Main struct declaration
 // ==========================
 typedef struct MicroSuiEd25519 MicroSuiEd25519;
@@ -22,7 +31,7 @@ struct MicroSuiEd25519 {
     uint8_t secret_key[32];
 
     // OO-style methods
-    const char* (*signTransaction)(MicroSuiEd25519 *self, const char *msg);
+    SuiSignature (*signTransaction)(MicroSuiEd25519 *self, const char *msg);
     const char* (*getSecretKey)(MicroSuiEd25519 *self);
     const uint8_t* (*getPublicKey)(MicroSuiEd25519 *self);
     const char* (*toSuiAddress)(MicroSuiEd25519 *self);
@@ -37,7 +46,7 @@ MicroSuiEd25519 SuiKeypair_fromSecretKey(const char *sk);
 // ==========================
 // Internal method prototypes (implementations)
 // ==========================
-static const char* ms_signTransaction_impl(MicroSuiEd25519 *self, const char *msg);
+static SuiSignature ms_signTransaction_impl(MicroSuiEd25519 *self, const char *msg);
 static const char* ms_getSecretKey_impl(MicroSuiEd25519 *self);
 static const uint8_t* ms_getPublicKey_impl(MicroSuiEd25519 *self);
 static const char* ms_toSuiAddress_impl(MicroSuiEd25519 *self);
@@ -86,23 +95,23 @@ MicroSuiEd25519 SuiKeypair_fromSecretKey(const char *sk) {
 // ==========================
 // Empty method implementations
 // ==========================
-static const char* ms_signTransaction_impl(MicroSuiEd25519 *self, const char *msg) {
-    static char sui_sig_base64[133]; // Placeholder for signature
+static SuiSignature ms_signTransaction_impl(MicroSuiEd25519 *self, const char *msg) {
+    SuiSignature sig;
 
-    // Converting the message from hex to bytes
-    size_t message_len = strlen(msg) / 2; // 2 hex chars = 1 byte
+    // decode hex string msg -> bytes
+    size_t message_len = strlen(msg) / 2;
     uint8_t message[message_len];
     hex_to_bytes(msg, message, message_len);
 
-    // Generating the Sui Signature from the message and secret key
-    uint8_t signature[97];
-    microsui_sign_ed25519(signature, message, message_len, self->secret_key);
+    // sign
+    microsui_sign_ed25519(sig.bytes, message, message_len, self->secret_key);
 
-    // Convert the signature to Base64 format
-    bytes_to_base64(signature, 97, sui_sig_base64, 133);
+    // encode to base64
+    bytes_to_base64(sig.bytes, 97, sig.signature, sizeof(sig.signature));
 
-    return sui_sig_base64; // placeholder
+    return sig;
 }
+
 
 static const char* ms_getSecretKey_impl(MicroSuiEd25519 *self) {
     static char secret_key[PK_BECH32_LEN + 1]; // Placeholder for secret key

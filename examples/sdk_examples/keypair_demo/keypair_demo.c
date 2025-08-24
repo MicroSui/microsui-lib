@@ -35,8 +35,13 @@ int main(void) {
 
     printf("\n\tSigning a Transaction Message with the keypair...\n");
     const char* messageToSign = "0000020008c0d8a7000000000000202e3d52393c9035afd1ef38abd7fce2dad71f0e276b522fb274f4e14d1df9747202020001010000010103000000000101009c0b6f8f043efe774abf4c7142a28f164ed99a0db47b57c8a9986838a75cdea001eb703aa03ea788d4e768947ac1141432dc554fe00aba196e70329d0c8ac536bd630fd0140000000020c0b96efe5463bc3f3b148f4cb9d0bd7daf6aa2fd6865295a0941947933261d089c0b6f8f043efe774abf4c7142a28f164ed99a0db47b57c8a9986838a75cdea0e80300000000000040ab3c000000000000";
-    const char* sig = keypair.signTransaction(&keypair, messageToSign);
-    printf("Signature in base64: %s\n", sig);
+    SuiSignature sig = keypair.signTransaction(&keypair, messageToSign);
+    printf("   Signature in base64: %s\n", sig.signature);
+    printf("   Signature in bytes: ");
+    for (int i = 0; i < 97; i++) {
+        printf("%02x", sig.bytes[i]);
+    }
+    printf("\n");
 
     printf("\n\n\t\t --- END OF KEYPAIR DEMO ---\n");
 

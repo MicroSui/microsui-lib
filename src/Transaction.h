@@ -10,12 +10,10 @@
 // ==========================
 // Transaction general structs and constants
 // ==========================
-typedef struct TransactionBytes TransactionBytes;
-
-struct TransactionBytes {
+typedef struct {
     uint8_t* data;      // Placeholder for transaction bytes data
     size_t length;      // Length of the transaction bytes
-};
+} TransactionBytes;
 
 // ==========================
 // Main struct declaration
