@@ -32,7 +32,7 @@ struct MicroSuiTransaction {
 // ==========================
 // Constructors
 // ==========================
-MicroSuiTransaction init();
-MicroSuiTransaction setHarcodedTxBytes(const char *txBytesString);
+MicroSuiTransaction SuiTransaction_init();
+MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString);
 
 #endif // MICROSUI_TRANSACTION_H

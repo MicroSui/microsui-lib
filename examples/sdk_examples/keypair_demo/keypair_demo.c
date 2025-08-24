@@ -10,13 +10,13 @@ int main(void) {
     
     // Generate a random keypair with a seed extra value of 300
     const uint8_t seed_extra = (uint8_t)100;    // This value can be useful in systems with poor entropy generation, in that case you can use a random value taked from some sensor or other source of entropy
-    MicroSuiEd25519 keypair_random = generate(seed_extra);
+    MicroSuiEd25519 keypair_random = SuiKeypair_generate(seed_extra);
     printf("\n\t\t 1 - Random Keypair generated:\n");
     const char* sk_random = keypair_random.getSecretKey(&keypair_random);
     printf("Random created Secret Key: %s\n", sk_random);
 
     // Create a keypair from a given secret key in Bech32 format
-    MicroSuiEd25519 keypair = fromSecretKey("suiprivkey1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq509duq");
+    MicroSuiEd25519 keypair = SuiKeypair_fromSecretKey("suiprivkey1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq509duq");
     printf("\n\t\t 2 - Keypair from Bech32 private key:\n");
 
     printf("\tRecover Bech32 private key from keypair:\n");

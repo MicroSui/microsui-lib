@@ -35,8 +35,8 @@ struct MicroSuiTransaction {
 // ==========================
 // Constructor prototypes
 // ==========================
-MicroSuiTransaction init();
-MicroSuiTransaction setHarcodedTxBytes(const char *txBytesString);
+MicroSuiTransaction SuiTransaction_init();
+MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString);
 
 // ==========================
 // Internal method prototypes (implementations)
@@ -46,7 +46,7 @@ static const uint8_t* ms_build_impl(MicroSuiTransaction *self);
 // ==========================
 // Constructor implementations
 // ==========================
-MicroSuiTransaction init() {
+MicroSuiTransaction SuiTransaction_init() {
     MicroSuiTransaction tx;
     memset(&tx, 0, sizeof(tx));
 
@@ -60,7 +60,7 @@ MicroSuiTransaction init() {
     return tx;
 }
 
-MicroSuiTransaction setHarcodedTxBytes(const char *txBytesString) {
+MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString) {
     MicroSuiTransaction tx;
     memset(&tx, 0, sizeof(tx));
 

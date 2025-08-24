@@ -31,8 +31,8 @@ struct MicroSuiEd25519 {
 // ==========================
 // Constructor prototypes
 // ==========================
-MicroSuiEd25519 generate(uint8_t seed_extra);
-MicroSuiEd25519 fromSecretKey(const char *sk);
+MicroSuiEd25519 SuiKeypair_generate(uint8_t seed_extra);
+MicroSuiEd25519 SuiKeypair_fromSecretKey(const char *sk);
 
 // ==========================
 // Internal method prototypes (implementations)
@@ -45,7 +45,7 @@ static const char* ms_toSuiAddress_impl(MicroSuiEd25519 *self);
 // ==========================
 // Constructor implementations
 // ==========================
-MicroSuiEd25519 generate(uint8_t seed_extra) {
+MicroSuiEd25519 SuiKeypair_generate(uint8_t seed_extra) {
     MicroSuiEd25519 kp;
     memset(&kp, 0, sizeof(kp));
 
@@ -65,7 +65,7 @@ MicroSuiEd25519 generate(uint8_t seed_extra) {
     return kp;
 }
 
-MicroSuiEd25519 fromSecretKey(const char *sk) {
+MicroSuiEd25519 SuiKeypair_fromSecretKey(const char *sk) {
     MicroSuiEd25519 kp;
     memset(&kp, 0, sizeof(kp));
 

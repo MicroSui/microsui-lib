@@ -25,7 +25,7 @@ struct MicroSuiEd25519 {
 // ==========================
 // Constructors
 // ==========================
-MicroSuiEd25519 generate(uint8_t seed_extra);
-MicroSuiEd25519 fromSecretKey(const char *sk);
+MicroSuiEd25519 SuiKeypair_generate(uint8_t seed_extra);
+MicroSuiEd25519 SuiKeypair_fromSecretKey(const char *sk);
 
 #endif // MICROSUI_KEYPAIR_H
