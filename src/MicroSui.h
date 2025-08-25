@@ -12,6 +12,7 @@ extern "C" {
 // OO-style headers
 #include "Keypair.h"
 #include "Transaction.h"
+#include "Client.h"
 
 // General headers
 #include "sign.h"
