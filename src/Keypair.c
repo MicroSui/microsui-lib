@@ -93,7 +93,7 @@ MicroSuiEd25519 SuiKeypair_fromSecretKey(const char *sk) {
 }
 
 // ==========================
-// Empty method implementations
+// Method implementations
 // ==========================
 static SuiSignature ms_signTransaction_impl(MicroSuiEd25519 *self, const char *msg) {
     SuiSignature sig;

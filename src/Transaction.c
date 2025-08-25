@@ -85,7 +85,7 @@ MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString)
 }
 
 // ==========================
-// Empty method implementations
+// Method implementations
 // ==========================
 static TransactionBytes ms_build_impl(MicroSuiTransaction *self) {
     // TODO: Implement the logic to build the transaction bytes
