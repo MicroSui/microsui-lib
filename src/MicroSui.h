@@ -14,13 +14,17 @@ extern "C" {
 #include "Transaction.h"
 #include "Client.h"
 
-// General headers
+// MicroSui core headers
 #include "sign.h"
 #include "cryptography.h"
 #include "byte_conversions.h"
 #include "rpc_json_builder.h"
 #include "http_router.h"
 #include "wifi_router.h"
+
+// Utility headers
+#include "utils/string_builder.h"
+#include "utils/string_utils.h"
 
 #ifdef __cplusplus
 }
