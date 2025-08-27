@@ -33,14 +33,14 @@ void setup() {
 
   // Using method1 of the client: signAndExecuteTransaction (Simpler, creates the signature internally)
   SuiTransactionBlockResponse res1 = client.signAndExecuteTransaction(&client, keypair, tx);
-  Serial.print(res1.jsonResponse);
+  Serial.println("First call (signAndExecuteTransaction function) result: \n\t%s\n", res1.jsonResponse);
 
   // Generate signature for use it in
   SuiSignature sig = keypair.signTransaction(&keypair, message_string);
 
   // Using method2 of the client: executeTransactionBlock (More customizable, needs the signature as parameter)
   SuiTransactionBlockResponse res2 = client.executeTransactionBlock(&client, tx.tx_bytes, sig);
-  Serial.print(res2.jsonResponse);
+  Serial.println("Second call (executeTransactionBlock function) result: \n\t%s", res2.jsonResponse);
 
   wifi.disconnect(&wifi);
 }

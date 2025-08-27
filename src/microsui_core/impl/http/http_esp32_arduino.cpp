@@ -49,11 +49,11 @@ char* microsui_http_post(const char* host, const char* path, int port, const cha
         if (https.begin(*client, url)) {
             https.addHeader("Content-Type", "application/json");
 
-            Serial.print("[MicroSui HTTP Client]: Sending Transaction to the Sui Network...\n");
+            Serial.println("[MicroSui HTTP Client]: Sending Transaction to the Sui Network...");
             int httpCode = https.POST(jsonBody);
 
             if (httpCode > 0) {
-                Serial.printf("[MicroSui HTTP Client]: Transaction sent to the Sui Network");
+                Serial.println("[MicroSui HTTP Client]: Transaction sent to the Sui Network");
                 if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_CREATED) {
                     
                     String payload = https.getString();
@@ -73,11 +73,11 @@ char* microsui_http_post(const char* host, const char* path, int port, const cha
                     return buf;
                 }
             } else {
-                Serial.printf("[MicroSui HTTP Client]: Transaction send operation failed, error: %s\n", https.errorToString(httpCode).c_str());
+                Serial.println("[MicroSui HTTP Client]: Transaction send operation failed, error: %s", https.errorToString(httpCode).c_str());
             }
             https.end();
         } else {
-            Serial.printf("[MicroSui HTTP Client]: Unable to connect to RPC: '%s'\n", url.c_str());
+            Serial.println("[MicroSui HTTP Client]: Unable to connect to RPC: '%s'", url.c_str());
         }
         delete client;
     } else {
