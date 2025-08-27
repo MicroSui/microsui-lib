@@ -73,11 +73,11 @@ char* microsui_http_post(const char* host, const char* path, int port, const cha
                     return buf;
                 }
             } else {
-                Serial.println("[MicroSui HTTP Client]: Transaction send operation failed, error: %s", https.errorToString(httpCode).c_str());
+                Serial.printf("[MicroSui HTTP Client]: Transaction send operation failed, error: %s\n", https.errorToString(httpCode).c_str());
             }
             https.end();
         } else {
-            Serial.println("[MicroSui HTTP Client]: Unable to connect to RPC: '%s'", url.c_str());
+            Serial.printf("[MicroSui HTTP Client]: Unable to connect to RPC: '%s'\n", url.c_str());
         }
         delete client;
     } else {
