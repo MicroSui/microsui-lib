@@ -16,7 +16,7 @@ HTTP_LIBS = -lcurl $(if $(filter Windows_NT,$(OS)),-lws2_32 -lbcrypt -lwldap32 -
 
 CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(MICROSUI_CORE) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
 
-SOURCES := encode_decode_privkey.c constants.c \
+SOURCES := encode_decode_privkey.c \
 			$(SRC)/*.c \
 			$(MICROSUI_CORE)/*.c \
 			$(UTILS)/*.c \
