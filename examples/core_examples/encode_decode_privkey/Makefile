@@ -16,6 +16,8 @@ HTTP_LIBS = -lcurl $(if $(filter Windows_NT,$(OS)),-lws2_32 -lbcrypt -lwldap32 -
 
 CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(MICROSUI_CORE) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519)
 
+WIFI_UNSUPPORTED_FILE = $(MICROSUI_CORE)/impl/wifi/wifi_unsupported.c # This file is used when make is made on a system without WiFi support
+
 SOURCES := encode_decode_privkey.c \
 			$(SRC)/*.c \
 			$(MICROSUI_CORE)/*.c \
@@ -24,7 +26,8 @@ SOURCES := encode_decode_privkey.c \
 			$(wildcard $(COMPACT)/*.c) \
 			$(wildcard $(C25519)/*.c) \
 			$(HTTP_CURL_FILE) \
-			$(HTTP_UNSUPPORTED_FILE)
+			$(HTTP_UNSUPPORTED_FILE) \
+			$(WIFI_UNSUPPORTED_FILE)
 
 OUTPUT := encode_decode_privkey.out
 

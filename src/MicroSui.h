@@ -13,6 +13,7 @@ extern "C" {
 #include "Keypair.h"
 #include "Transaction.h"
 #include "Client.h"
+#include "WiFi.h"
 
 // MicroSui core headers
 #include "microsui_core/sign.h"

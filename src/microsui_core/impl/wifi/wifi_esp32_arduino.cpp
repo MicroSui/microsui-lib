@@ -24,4 +24,20 @@ int microsui_connect_wifi(const char* ssid, const char* password) {
     return 0;
 }
 
+int microsui_disconnect_wifi() {
+    Serial.println("Disconnecting WiFi...");
+  
+    // Disconnect from the current AP - true:erase current WiFi connection and true: erase stored credentials in flash
+    WiFi.disconnect(true, true);
+
+    // Stop WiFi driver completely
+    WiFi.mode(WIFI_OFF);
+  
+    // Clear any networks stored in WiFiMulti (it keeps them in RAM)
+    WiFiMulti.cleanAPlist();
+  
+    Serial.println("WiFi disconnected and resources freed");
+    return 0;
+  }
+
 #endif

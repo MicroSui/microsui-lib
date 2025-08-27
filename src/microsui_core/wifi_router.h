@@ -11,4 +11,6 @@
 
 int microsui_connect_wifi(const char* ssid, const char* password);
 
+int microsui_disconnect_wifi();
+
 #endif

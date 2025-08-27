@@ -25,4 +25,19 @@ int microsui_connect_wifi(const char* ssid, const char* password)
     return -1;
 }
 
+int microsui_disconnect_wifi() {
+    /* One-time friendly runtime message */
+    static int warned = 0;
+    if (!warned) {
+        warned = 1;
+        /* Use stderr on desktop; harmless on most systems. */
+        fprintf(stderr,
+            "MicroSui WiFi: this platform isn't supported yet.\n"
+            "To use it here, add an adapter for your platform and save it in src/impl/wifi/wifi_<your_platform>.extension.\n");
+    }
+
+    errno = ENOSYS; /* Not implemented */
+    return -1;
+}
+
 #endif
