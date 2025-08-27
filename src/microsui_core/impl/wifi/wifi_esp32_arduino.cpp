@@ -1,7 +1,7 @@
 #if defined(ARDUINO) && defined(ARDUINO_ARCH_ESP32)
 
 extern "C" {
-#include "wifi_router.h"
+#include "microsui_core/wifi_router.h"
 }
 #include <Arduino.h>
 #include <WiFiClientSecure.h>
