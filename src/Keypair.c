@@ -11,6 +11,7 @@
 
 #include "microsui_core/sign.h"
 #include "microsui_core/cryptography.h"
+#include "microsui_core/key_management.h"
 #include "microsui_core/byte_conversions.h"
 
 // ==========================
