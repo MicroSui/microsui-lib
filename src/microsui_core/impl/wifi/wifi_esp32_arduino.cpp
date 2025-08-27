@@ -33,9 +33,6 @@ int microsui_disconnect_wifi() {
     // Stop WiFi driver completely
     WiFi.mode(WIFI_OFF);
   
-    // Clear any networks stored in WiFiMulti (it keeps them in RAM)
-    WiFiMulti.cleanAPlist();
-  
     Serial.println("WiFi disconnected and resources freed");
     return 0;
   }
