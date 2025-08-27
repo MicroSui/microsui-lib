@@ -5,6 +5,11 @@ extern "C" {
 }
 #include <Arduino.h>
 #include <HTTPClient.h>
+#include <WiFiClientSecure.h>
+#include <HTTPClient.h>
+#include <WiFiMulti.h>
+
+extern WiFiMulti WiFiMulti; // use the same object created in the WiFi file
 
 void setClock() {
     configTime(0, 0, "pool.ntp.org");
@@ -26,6 +31,11 @@ void setClock() {
 }
 
 char* microsui_http_post(const char* host, const char* path, int port, const char* jsonBody) {
+    if (WiFiMulti.run() != WL_CONNECTED) {
+        Serial.println("WiFi not connected! Please connect to WiFi first.");
+        return NULL;
+    }
+
     //setClock(); // Uncomment this line if you want to set the clock using NTP
 
     NetworkClientSecure *client = new NetworkClientSecure;
