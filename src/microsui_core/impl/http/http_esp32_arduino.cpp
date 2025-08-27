@@ -44,18 +44,18 @@ char* microsui_http_post(const char* host, const char* path, int port, const cha
         client->setInsecure();
 
         HTTPClient https;
-        Serial.print("[HTTPS] begin...\n");
 
         String url = "https://" + String(host) + ":" + String(port) + String(path);
         if (https.begin(*client, url)) {
             https.addHeader("Content-Type", "application/json");
 
-            Serial.print("[HTTPS] POST...\n");
+            Serial.print("[MicroSui HTTP Client]: Sending Transaction to the Sui Network...\n");
             int httpCode = https.POST(jsonBody);
 
             if (httpCode > 0) {
-                Serial.printf("[HTTPS] POST... code: %d\n", httpCode);
+                Serial.printf("[MicroSui HTTP Client]: Transaction sent to the Sui Network");
                 if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_CREATED) {
+                    
                     String payload = https.getString();
 
                     // Allocate memory for the response
@@ -73,15 +73,15 @@ char* microsui_http_post(const char* host, const char* path, int port, const cha
                     return buf;
                 }
             } else {
-                Serial.printf("[HTTPS] POST... failed, error: %s\n", https.errorToString(httpCode).c_str());
+                Serial.printf("[MicroSui HTTP Client]: Transaction send operation failed, error: %s\n", https.errorToString(httpCode).c_str());
             }
             https.end();
         } else {
-            Serial.printf("[HTTPS] Unable to connect to %s\n", url.c_str());
+            Serial.printf("[MicroSui HTTP Client]: Unable to connect to RPC: '%s'\n", url.c_str());
         }
         delete client;
     } else {
-        Serial.println("Unable to create client");
+        Serial.println("[MicroSui HTTP Client]: Unable to create HTTP client");
     }
     return NULL; // Default error case
 }
