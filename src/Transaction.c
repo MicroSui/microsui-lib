@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "byte_conversions.h"
+#include "microsui_core/byte_conversions.h"
 
 // ==========================
 // Transaction general structs and constants

@@ -9,9 +9,9 @@
 #include <stdbool.h>
 #include <time.h>
 
-#include "sign.h"
-#include "cryptography.h"
-#include "byte_conversions.h"
+#include "microsui_core/sign.h"
+#include "microsui_core/cryptography.h"
+#include "microsui_core/byte_conversions.h"
 
 // ==========================
 // Transaction general structs and constants

@@ -15,16 +15,16 @@ extern "C" {
 #include "Client.h"
 
 // MicroSui core headers
-#include "sign.h"
-#include "cryptography.h"
-#include "byte_conversions.h"
-#include "rpc_json_builder.h"
-#include "http_router.h"
-#include "wifi_router.h"
+#include "microsui_core/sign.h"
+#include "microsui_core/cryptography.h"
+#include "microsui_core/byte_conversions.h"
+#include "microsui_core/rpc_json_builder.h"
+#include "microsui_core/http_router.h"
+#include "microsui_core/wifi_router.h"
 
 // Utility headers
-#include "utils/string_builder.h"
-#include "utils/string_utils.h"
+#include "microsui_core/utils/string_builder.h"
+#include "microsui_core/utils/string_utils.h"
 
 #ifdef __cplusplus
 }

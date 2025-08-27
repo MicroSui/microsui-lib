@@ -9,10 +9,10 @@
 
 #include "Keypair.h"
 #include "Transaction.h"
-#include "http_router.h"
-#include "rpc_json_builder.h"
-#include "byte_conversions.h"
-#include "utils/string_utils.h"
+#include "microsui_core/http_router.h"
+#include "microsui_core/rpc_json_builder.h"
+#include "microsui_core/byte_conversions.h"
+#include "microsui_core/utils/string_utils.h"
 
 // ==========================
 // Transaction general structs and constants
