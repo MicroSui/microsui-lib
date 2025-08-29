@@ -23,8 +23,8 @@ int main(void) {
     // Create a keypair from a given secret key in Bech32 format
     MicroSuiEd25519 keypair = SuiKeypair_fromSecretKey(sui_private_key_bech32);
     
-    // Initialize a MicroSuiTransaction object from setHarcodedTxBytes(...) constructor
-    MicroSuiTransaction tx = SuiTransaction_setHarcodedTxBytes(message_string);
+    // Initialize a MicroSuiTransaction object from setPrebuiltTxBytes(...) constructor
+    MicroSuiTransaction tx = SuiTransaction_setPrebuiltTxBytes(message_string);
 
     // Using method1 of the client: signAndExecuteTransaction (Simpler, creates the signature internally)
     SuiTransactionBlockResponse res1 = client.signAndExecuteTransaction(&client, keypair, tx);

@@ -1,8 +1,8 @@
 #include <MicroSui.h>
 
 // WiFi Credentials Configuration
-const char* wifi_ssid = "iPhone";
-const char* wifi_pass = "123456789";
+const char* wifi_ssid = "myWiFiSSID";
+const char* wifi_pass = "myWiFiPass";
 
 // Sui RPC Node URL
 const char* rpc_url = "https://fullnode.testnet.sui.io:443/"; // Sui Testnet fullnode RPC URL
@@ -28,8 +28,8 @@ void setup() {
   // Create a keypair from a given secret key in Bech32 format
   MicroSuiEd25519 keypair = SuiKeypair_fromSecretKey(sui_private_key_bech32);
 
-  // Initialize a MicroSuiTransaction object from setHarcodedTxBytes(...) constructor
-  MicroSuiTransaction tx = SuiTransaction_setHarcodedTxBytes(message_string);
+  // Initialize a MicroSuiTransaction object from setPrebuiltTxBytes(...) constructor
+  MicroSuiTransaction tx = SuiTransaction_setPrebuiltTxBytes(message_string);
 
   // Using method1 of the client: signAndExecuteTransaction (Simpler, creates the signature internally)
   SuiTransactionBlockResponse res1 = client.signAndExecuteTransaction(&client, keypair, tx);
@@ -48,7 +48,7 @@ void setup() {
     Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].coinType = "); Serial.println(res1.balanceChanges[i].coinType);
     Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].owner = "); Serial.println(res1.balanceChanges[i].owner);
   }
-  
+
 
   // After each Sui Execute Transaction you must call tx.clear(&tx) (To avoid memory leaks)
   tx.clear(&tx); // VERY IMPORTANT STEP

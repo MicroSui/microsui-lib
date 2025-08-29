@@ -17,7 +17,7 @@
  *   For now, transactions are provided manually as raw TxBytes, and the actual
  *   construction/serialization is delegated externally.
  * - Memory for transaction bytes is dynamically allocated when using
- *   SuiTransaction_setHarcodedTxBytes(). Always call `clear()` to avoid leaks.
+ *   SuiTransaction_setPrebuiltTxBytes(). Always call `clear()` to avoid leaks.
  * - Designed for embedded-friendly environments, following the MicroSui style.
  * 
  * Inspired by the Mysten Labs TypeScript SDK, adapted for embedded C.
@@ -56,7 +56,7 @@ struct MicroSuiTransaction {
 // Constructor prototypes
 // ==========================
 MicroSuiTransaction SuiTransaction_init();
-MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString);
+MicroSuiTransaction SuiTransaction_setPrebuiltTxBytes(const char *txBytesString);
 
 // ==========================
 // Internal method prototypes (implementations)
@@ -109,7 +109,7 @@ MicroSuiTransaction SuiTransaction_init() {
  *       passed as prebuilt bytes.
  * @note Caller must eventually call `clear()` to free allocated memory.
  */
-MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString) {
+MicroSuiTransaction SuiTransaction_setPrebuiltTxBytes(const char *txBytesString) {
     MicroSuiTransaction tx;
     memset(&tx, 0, sizeof(tx));
 
