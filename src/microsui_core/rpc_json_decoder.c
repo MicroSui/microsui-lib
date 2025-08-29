@@ -203,37 +203,26 @@ static void fill_balance_changes(SuiTransactionBlockResponse* out, const jsmn_ct
 }
 
 // ---------- Public functions ----------
-SuiTransactionBlockResponse* microsui_generate_tx_block_response_from_json(const char* json_response_str) {
-    static SuiTransactionBlockResponse resp;        // static lifetime, reused each call
-    static jsmntok_t tokens[JSMN_MAX_TOKENS];       // static tokens to avoid big stack usage
+int microsui_generate_tx_block_response_from_json(const char* json, SuiTransactionBlockResponse* out) {
+    static jsmntok_t tokens[JSMN_MAX_TOKENS]; // ok que sea static para no gastar stack
     jsmn_ctx ctx;
 
-    // Reset arena and lengths
-    arena_reset(&resp);
-    resp.balanceChanges_len        = 0;
-    resp.checkpoint                = NULL;
-    resp.confirmedLocalExecution   = NULL;
-    resp.digest                    = NULL;
+    if (!out) return -1;
+    arena_reset(out);
+    out->balanceChanges_len      = 0;
+    out->checkpoint              = NULL;
+    out->confirmedLocalExecution = NULL;
+    out->digest                  = NULL;
 
-    // Parse once
-    int rc = jsmn_parse_all(json_response_str, tokens, JSMN_MAX_TOKENS, &ctx);
+    int rc = jsmn_parse_all(json, tokens, JSMN_MAX_TOKENS, &ctx);
     if (rc != 0) {
-        // Optionally store an error tag if you want visibility
-        resp.digest = arena_copy_cstr(&resp, "[parse_error]");
-        return &resp;
+        out->digest = arena_copy_cstr(out, "[parse_error]");
+        return rc;
     }
 
-    // Extract fields
-    fill_balance_changes(&resp, &ctx);
-
-    // checkpoint: search anywhere (often top-level alongside result)
-    resp.checkpoint = copy_key_anywhere(&resp, &ctx, "checkpoint");
-
-    // confirmedLocalExecution: primitive true/false → stored as "true"/"false"
-    resp.confirmedLocalExecution = copy_key_anywhere(&resp, &ctx, "confirmedLocalExecution");
-
-    // digest: prefer result.digest, else first digest anywhere
-    resp.digest = copy_digest(&resp, &ctx);
-
-    return &resp;
+    fill_balance_changes(out, &ctx);
+    out->checkpoint              = copy_key_anywhere(out, &ctx, "checkpoint");
+    out->confirmedLocalExecution = copy_key_anywhere(out, &ctx, "confirmedLocalExecution");
+    out->digest                  = copy_digest(out, &ctx);
+    return 0;
 }

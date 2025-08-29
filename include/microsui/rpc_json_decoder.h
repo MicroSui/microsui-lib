@@ -43,7 +43,6 @@ typedef struct SuiTransactionBlockResponse {
     char   _arena[RESP_ARENA_SIZE];
     size_t _used;
 } SuiTransactionBlockResponse;
-typedef SuiTransactionBlockResponse* SuiTxResponse;
 
 #endif
 
@@ -56,6 +55,6 @@ typedef struct {
     jsmntype_t    root_type;  // Type of root token (OBJECT/ARRAY/...)
 } jsmn_ctx;
 
-SuiTransactionBlockResponse* microsui_generate_tx_block_response_from_json(const char* json_response_str);
+int microsui_generate_tx_block_response_from_json(const char* json, SuiTransactionBlockResponse* out);
 
 #endif

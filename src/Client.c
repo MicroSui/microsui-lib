@@ -87,7 +87,7 @@ static SuiTransactionBlockResponse ms_signAndExecuteTransaction_impl(
 
     char* json_res = microsui_http_post(host, path, port, jsonRequest);
 
-    res = *microsui_generate_tx_block_response_from_json(json_res);
+    microsui_generate_tx_block_response_from_json(json_res, &res);
 
     return res; // placeholder
 }
@@ -110,7 +110,7 @@ static SuiTransactionBlockResponse ms_executeTransactionBlock_impl(
 
     char* json_res = microsui_http_post(host, path, port, jsonRequest);
 
-    res = *microsui_generate_tx_block_response_from_json(json_res);
+    microsui_generate_tx_block_response_from_json(json_res, &res);
 
     return res; // placeholder
 }

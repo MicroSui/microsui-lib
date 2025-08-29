@@ -45,7 +45,6 @@ typedef struct SuiTransactionBlockResponse {
     char   _arena[RESP_ARENA_SIZE];
     size_t _used;
 } SuiTransactionBlockResponse;
-typedef SuiTransactionBlockResponse* SuiTxResponse;
 
 #endif
 
