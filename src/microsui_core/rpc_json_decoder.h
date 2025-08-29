@@ -21,6 +21,10 @@
 #endif
 
 // ---------- Public structs ----------
+
+#ifndef RPC_RESPONSE_STRUCTS
+#define RPC_RESPONSE_STRUCTS
+
 typedef struct BalanceChange {
     char* amount;    // e.g., "100000000"
     char* coinType;  // e.g., "0x2::sui::SUI"
@@ -40,6 +44,8 @@ typedef struct SuiTransactionBlockResponse {
     size_t _used;
 } SuiTransactionBlockResponse;
 typedef SuiTransactionBlockResponse* SuiTxResponse;
+
+#endif
 
 
 // Reusable context after parsing once.

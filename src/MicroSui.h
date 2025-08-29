@@ -21,9 +21,9 @@ extern "C" {
 #include "microsui_core/key_management.h"
 #include "microsui_core/byte_conversions.h"
 #include "microsui_core/rpc_json_builder.h"
+#include "microsui_core/rpc_json_decoder.h"
 #include "microsui_core/http_router.h"
 #include "microsui_core/wifi_router.h"
-
 
 // Utility headers
 #include "microsui_core/utils/string_builder.h"

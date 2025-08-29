@@ -33,14 +33,27 @@ void setup() {
 
   // Using method1 of the client: signAndExecuteTransaction (Simpler, creates the signature internally)
   SuiTransactionBlockResponse res1 = client.signAndExecuteTransaction(&client, keypair, tx);
-  Serial.printf("First call (signAndExecuteTransaction function) result: \n\t%s\n", res1.jsonResponse);
+  Serial.printf("First call (signAndExecuteTransaction function):");
+  Serial.printf("\t\tSecond call (executeTransactionBlock function) result:\n");
+  Serial.printf("\t Tx Digest= %s\n", res1.digest);
+  Serial.printf("\t Tx Checkpoint= %s\n", res1.checkpoint);
+  Serial.printf("\t Tx confirmedLocalExecution= %s\n", res1.confirmedLocalExecution);
+
+  Serial.printf("\n\t\t Balance Changes: %d\n", res1.balanceChanges_len);
+  for (int i = 0; i < res1.balanceChanges_len; i++)
+  {
+    Serial.printf("\t Balances Changes Coin %d:\n", i+1);
+    Serial.printf("\t\t balanceChanges[%d].amount= %s\n", i, res1.balanceChanges[i].amount);
+    Serial.printf("\t\t balanceChanges[%d].coinType= %s\n", i, res1.balanceChanges[i].coinType);
+    Serial.printf("\t\t balanceChanges[%d].owner= %s\n\n", i, res1.balanceChanges[i].owner);
+  }
 
   // Generate signature for use it in
   SuiSignature sig = keypair.signTransaction(&keypair, message_string);
 
   // Using method2 of the client: executeTransactionBlock (More customizable, needs the signature as parameter)
   SuiTransactionBlockResponse res2 = client.executeTransactionBlock(&client, tx.tx_bytes, sig);
-  Serial.printf("Second call (executeTransactionBlock function) result: \n\t%s\n", res2.jsonResponse);
+  Serial.printf("\t\tSecond call (executeTransactionBlock function) - Digest %s (same):\n", res2.digest);
 
   wifi.disconnect(&wifi);
 }

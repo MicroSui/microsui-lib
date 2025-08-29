@@ -31,19 +31,31 @@ int main(void) {
 
     // Using method1 of the client: signAndExecuteTransaction (Simpler, creates the signature internally)
     SuiTransactionBlockResponse res1 = client.signAndExecuteTransaction(&client, keypair, tx);
-    if (res1.jsonResponse == NULL) {
+    if (res1.digest == NULL) {
         printf("Error: No response from Sui Network\n");
         return -1;
     }
-    printf("\n\t Sui Network RPC Response 1 (signAndExecuteTransaction method) - RAW JSON:\n%s\n", res1.jsonResponse);
+    printf("\n\t Sui Network RPC Response 1 (signAndExecuteTransaction method):\n\n");
+    printf("\t Tx Digest= %s\n", res1.digest);
+    printf("\t Tx Checkpoint= %s\n", res1.checkpoint);
+    printf("\t Tx confirmedLocalExecution= %s\n", res1.confirmedLocalExecution);
+
+    printf("\n\t\t Balance Changes: %d\n", res1.balanceChanges_len);
+    for (int i = 0; i < res1.balanceChanges_len; i++)
+    {
+        printf("\t Balances Changes Coin %d:\n", i+1);
+        printf("\t\t balanceChanges[%d].amount= %s\n", i, res1.balanceChanges[i].amount);
+        printf("\t\t balanceChanges[%d].coinType= %s\n", i, res1.balanceChanges[i].coinType);
+        printf("\t\t balanceChanges[%d].owner= %s\n\n", i, res1.balanceChanges[i].owner);
+    }
 
     // Using method2 of the client: executeTransactionBlock (More customizable, needs the signature as parameter)
     SuiTransactionBlockResponse res2 = client.executeTransactionBlock(&client, tx.tx_bytes, sig);
-    if (res2.jsonResponse == NULL) {
+    if (res2.digest == NULL) {
         printf("Error: No response from Sui Network\n");
         return -1;
     }
-    printf("\n\t Sui Network RPC Response 2 (executeTransactionBlock method) - RAW JSON:\n%s\n", res2.jsonResponse);
+    printf("\n\t Sui Network RPC Response 2 (executeTransactionBlock method) - Digest:\n%s (same)\n", res2.digest);
 
     printf("\n\n\t\t --- END OF CLIENT DEMO ---\n");
 
