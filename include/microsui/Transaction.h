@@ -25,6 +25,7 @@ struct MicroSuiTransaction {
 
     // OO-style methods
     TransactionBytes (*build)(MicroSuiTransaction *self);
+    void (*clear)(MicroSuiTransaction *self);
 };
 
 // ==========================

@@ -74,7 +74,7 @@ static SuiTransactionBlockResponse ms_signAndExecuteTransaction_impl(
     char* tx_bytes_string = (char*)malloc(tx.tx_bytes.length * 2 + 1);
     bytes_to_hex(tx.tx_bytes.data, tx.tx_bytes.length, tx_bytes_string);
     SuiSignature sig = kp.signTransaction(&kp, tx_bytes_string);
-    free(tx_bytes_string); // Free the temporary hex string
+    free(tx_bytes_string); // Free allocated memory for temporary hex string
 
     // Create a JSON body for the request
     char* jsonRequest = microsui_prepare_executeTransactionBlock(sig.bytes, tx.tx_bytes.data, tx.tx_bytes.length);
@@ -86,8 +86,10 @@ static SuiTransactionBlockResponse ms_signAndExecuteTransaction_impl(
     }
 
     char* json_res = microsui_http_post(host, path, port, jsonRequest);
+    free(jsonRequest);  // Free allocated memory for Json Request after use
 
     microsui_generate_tx_block_response_from_json(json_res, &res);
+    free(json_res);  // Free allocated memory for Json Response after use
 
     return res; // placeholder
 }
@@ -109,8 +111,10 @@ static SuiTransactionBlockResponse ms_executeTransactionBlock_impl(
     }
 
     char* json_res = microsui_http_post(host, path, port, jsonRequest);
+    free(jsonRequest);  // Free allocated memory for Json Request after use
 
     microsui_generate_tx_block_response_from_json(json_res, &res);
+    free(json_res);  // Free allocated memory for Json Response after use
 
     return res; // placeholder
 }

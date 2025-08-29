@@ -28,6 +28,7 @@ struct MicroSuiTransaction {
 
     // OO-style methods
     TransactionBytes (*build)(MicroSuiTransaction *self);
+    void (*clear)(MicroSuiTransaction *self);
 };
 
 // ==========================
@@ -40,6 +41,7 @@ MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString)
 // Internal method prototypes (implementations)
 // ==========================
 static TransactionBytes ms_build_impl(MicroSuiTransaction *self);
+void ms_clear_impl(MicroSuiTransaction *self);
 
 // ==========================
 // Constructor implementations
@@ -54,6 +56,7 @@ MicroSuiTransaction SuiTransaction_init() {
 
     // Assign methods
     tx.build = ms_build_impl;
+    tx.clear = ms_clear_impl;
 
     return tx;
 }
@@ -80,6 +83,7 @@ MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString)
 
     // Assign methods
     tx.build = ms_build_impl;
+    tx.clear = ms_clear_impl;
 
     return tx;
 }
@@ -91,4 +95,13 @@ static TransactionBytes ms_build_impl(MicroSuiTransaction *self) {
     // TODO: Implement the logic to build the transaction bytes
 
     return self->tx_bytes;
+}
+
+void ms_clear_impl(MicroSuiTransaction *self) {
+    if (!self) return;
+    if (self->tx_bytes.data) {
+        free(self->tx_bytes.data);
+        self->tx_bytes.data = NULL;
+    }
+    self->tx_bytes.length = 0;
 }
