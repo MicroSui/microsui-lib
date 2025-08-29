@@ -12,14 +12,8 @@
 #include "microsui_core/http_router.h"
 #include "microsui_core/rpc_json_builder.h"
 #include "microsui_core/byte_conversions.h"
+#include "microsui_core/rpc_json_decoder.h"
 #include "microsui_core/utils/string_utils.h"
-
-// ==========================
-// Transaction general structs and constants
-// ==========================
-typedef struct {
-    char* jsonResponse;      // Placeholder for json response
-} SuiTransactionBlockResponse;
 
 // ==========================
 // Main struct declaration
@@ -88,11 +82,12 @@ static SuiTransactionBlockResponse ms_signAndExecuteTransaction_impl(
     // Parse the URL to extract host, path, and port
     char host[90]; char path[38]; int port = -1;
     if (parse_url(self->rpc_url, host, sizeof(host), path, sizeof(path), &port) != 0) {
-        res.jsonResponse = NULL; // Error parsing URL
         return res;
     }
 
-    res.jsonResponse = microsui_http_post(host, path, port, jsonRequest);
+    char* json_res = microsui_http_post(host, path, port, jsonRequest);
+
+    microsui_generate_tx_block_response_from_json(json_res, &res);
 
     return res; // placeholder
 }
@@ -110,11 +105,12 @@ static SuiTransactionBlockResponse ms_executeTransactionBlock_impl(
     // Parse the URL to extract host, path, and port
     char host[90]; char path[38]; int port = -1;
     if (parse_url(self->rpc_url, host, sizeof(host), path, sizeof(path), &port) != 0) {
-        res.jsonResponse = NULL; // Error parsing URL
         return res;
     }
 
-    res.jsonResponse = microsui_http_post(host, path, port, jsonRequest);
+    char* json_res = microsui_http_post(host, path, port, jsonRequest);
+
+    microsui_generate_tx_block_response_from_json(json_res, &res);
 
     return res; // placeholder
 }

@@ -9,13 +9,7 @@
 
 #include "Keypair.h"
 #include "Transaction.h"
-
-// ==========================
-// Transaction general structs and constants
-// ==========================
-typedef struct {
-    char* jsonResponse;      // Placeholder for json response
-} SuiTransactionBlockResponse;
+#include "microsui_core/rpc_json_decoder.h"
 
 // ==========================
 // Main struct declaration
@@ -29,6 +23,30 @@ struct MicroSuiClient {
     SuiTransactionBlockResponse (*signAndExecuteTransaction)(MicroSuiClient *self, MicroSuiEd25519 kp, MicroSuiTransaction tx);
     SuiTransactionBlockResponse (*executeTransactionBlock)(MicroSuiClient *self, TransactionBytes txBytes, SuiSignature signature);
 };
+
+#ifndef RPC_RESPONSE_STRUCTS
+#define RPC_RESPONSE_STRUCTS
+
+typedef struct BalanceChange {
+    char* amount;    // e.g., "100000000"
+    char* coinType;  // e.g., "0x2::sui::SUI"
+    char* owner;     // e.g., "0xabc..." (flattened AddressOwner if present)
+} BalanceChange;
+
+typedef struct SuiTransactionBlockResponse {
+    BalanceChange balanceChanges[MAX_BALANCE_CHANGES];
+    int           balanceChanges_len;       // actual count
+
+    char* checkpoint;               // may be NULL if not present
+    char* confirmedLocalExecution;  // "true"/"false" or NULL
+    char* digest;                   // may be NULL if not present
+
+    // Internal arena for string storage (do not use directly from outside)
+    char   _arena[RESP_ARENA_SIZE];
+    size_t _used;
+} SuiTransactionBlockResponse;
+
+#endif
 
 // ==========================
 // Constructors

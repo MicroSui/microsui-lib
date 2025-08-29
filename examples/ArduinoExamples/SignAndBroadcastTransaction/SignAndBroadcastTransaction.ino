@@ -27,20 +27,35 @@ void setup() {
 
   // Create a keypair from a given secret key in Bech32 format
   MicroSuiEd25519 keypair = SuiKeypair_fromSecretKey(sui_private_key_bech32);
-  
+
   // Initialize a MicroSuiTransaction object from setHarcodedTxBytes(...) constructor
   MicroSuiTransaction tx = SuiTransaction_setHarcodedTxBytes(message_string);
 
   // Using method1 of the client: signAndExecuteTransaction (Simpler, creates the signature internally)
   SuiTransactionBlockResponse res1 = client.signAndExecuteTransaction(&client, keypair, tx);
-  Serial.printf("First call (signAndExecuteTransaction function) result: \n\t%s\n", res1.jsonResponse);
+
+  Serial.printf("           First call (signAndExecuteTransaction function):");
+  Serial.print("   Tx Digest= "); Serial.println(res1.digest);
+  Serial.print("   Tx Checkpoint= "); Serial.println(res1.checkpoint);
+  Serial.print("   Tx confirmedLocalExecution= "); Serial.println(res1.confirmedLocalExecution);
+
+  Serial.print("        Balance Changes: "); Serial.println(res1.balanceChanges_len);
+
+  for (int i = 0; i < res1.balanceChanges_len; i++)
+  {
+    Serial.print("     Balance Changes Coin "); Serial.print(i+1); Serial.println(":");
+    Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].amount= "); Serial.println(res1.balanceChanges[i].amount);
+    Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].coinType= "); Serial.println(res1.balanceChanges[i].coinType);
+    Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].owner= "); Serial.println(res1.balanceChanges[i].owner);
+  }
 
   // Generate signature for use it in
   SuiSignature sig = keypair.signTransaction(&keypair, message_string);
 
   // Using method2 of the client: executeTransactionBlock (More customizable, needs the signature as parameter)
   SuiTransactionBlockResponse res2 = client.executeTransactionBlock(&client, tx.tx_bytes, sig);
-  Serial.printf("Second call (executeTransactionBlock function) result: \n\t%s\n", res2.jsonResponse);
+  
+  Serial.print("           Second call (executeTransactionBlock function) - Digest= "); Serial.println(res2.digest);
 
   wifi.disconnect(&wifi);
 }
