@@ -17,7 +17,7 @@ void setup() {
 
   delay(1000);
 
-  Serial.println("\n\t\t\t --- MicroSui ESP32 - Sign and Broadcast Transaction to the Sui Network ---\n");
+  Serial.println("\n\t\t\t --- MicroSui ESP32 - Sign and Execute Transaction to the Sui Network ---\n");
 
   // WiFi connect
   MicroSuiWiFi wifi = WiFi_connect(wifi_ssid, wifi_pass);
@@ -48,12 +48,7 @@ void setup() {
     Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].coinType = "); Serial.println(res1.balanceChanges[i].coinType);
     Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].owner = "); Serial.println(res1.balanceChanges[i].owner);
   }
-
-  /// Method 2 to send Tx to Sui Network: executeTransactionBlock (More customizable, needs the signature as parameter):
-  SuiSignature sig = keypair.signTransaction(&keypair, message_string); // We obtain the signature in base64 format
-  SuiTransactionBlockResponse res2 = client.executeTransactionBlock(&client, tx.tx_bytes, sig);
-  Serial.print("           Second call (executeTransactionBlock function) - Digest = "); Serial.println(res2.digest);
-
+  
 
   // After each Sui Execute Transaction you must call tx.clear(&tx) (To avoid memory leaks)
   tx.clear(&tx); // VERY IMPORTANT STEP
