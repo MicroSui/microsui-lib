@@ -1,6 +1,27 @@
-// Transaction.c — MicroSui Transaction object-style skeleton
-// - Inspired by Mysten's Sui TypeScript SDK, but written in C
-// - Using function pointers to simulate object methods
+/**
+ * @file Transaction.c
+ * @brief MicroSui Object-style API for constructing and managing Sui transactions.
+ *
+ * This module provides a C object-oriented style interface (via structs and
+ * function pointers) to represent Sui transactions. Each transaction holds
+ * its raw byte data and exposes methods to build or clear its contents.
+ *
+ * Features:
+ * - Initialize empty transactions.
+ * - Create transactions from predefined hex-encoded bytes.
+ * - Build transactions into raw byte arrays (placeholder).
+ * - Clear and free transaction memory safely.
+ *
+ * Notes:
+ * - Full transaction construction using Sui BCS serialization is **not yet implemented**.
+ *   For now, transactions are provided manually as raw TxBytes, and the actual
+ *   construction/serialization is delegated externally.
+ * - Memory for transaction bytes is dynamically allocated when using
+ *   SuiTransaction_setHarcodedTxBytes(). Always call `clear()` to avoid leaks.
+ * - Designed for embedded-friendly environments, following the MicroSui style.
+ * 
+ * Inspired by the Mysten Labs TypeScript SDK, adapted for embedded C.
+ */
 
 #include <stdint.h>
 #include <stddef.h>
@@ -46,6 +67,14 @@ void ms_clear_impl(MicroSuiTransaction *self);
 // ==========================
 // Constructor implementations
 // ==========================
+/**
+ * @brief Initialize an empty MicroSuiTransaction.
+ *
+ * Sets up a transaction with no bytes (data = NULL, length = 0) and
+ * assigns method pointers for building and clearing.
+ *
+ * @return Initialized MicroSuiTransaction struct.
+ */
 MicroSuiTransaction SuiTransaction_init() {
     MicroSuiTransaction tx;
     memset(&tx, 0, sizeof(tx));
@@ -61,6 +90,25 @@ MicroSuiTransaction SuiTransaction_init() {
     return tx;
 }
 
+/**
+ * @brief Initialize a transaction from a prebuilt hex-encoded TxBytes string.
+ *
+ * This function is a temporary helper: it assumes the caller already provides
+ * the raw transaction bytes (TxBytes) serialized externally, encoded as a
+ * hex string. These bytes are then decoded and stored inside the
+ * MicroSuiTransaction struct. The transaction takes ownership of the allocated
+ * memory, which will be released when `clear()` is called.
+ *
+ * @param[in] txBytesString   Null-terminated string containing prebuilt TxBytes
+ *                            (hex-encoded).
+ *
+ * @return MicroSuiTransaction struct initialized with the provided TxBytes.
+ *
+ * @note This is only a placeholder until full Sui BCS transaction construction
+ *       is implemented. For now, transactions must be prepared externally and
+ *       passed as prebuilt bytes.
+ * @note Caller must eventually call `clear()` to free allocated memory.
+ */
 MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString) {
     MicroSuiTransaction tx;
     memset(&tx, 0, sizeof(tx));
@@ -91,12 +139,33 @@ MicroSuiTransaction SuiTransaction_setHarcodedTxBytes(const char *txBytesString)
 // ==========================
 // Method implementations
 // ==========================
+/**
+ * @brief Build the transaction bytes.
+ *
+ * Placeholder implementation that currently just returns the internal
+ * transaction bytes without performing any serialization.
+ *
+ * @param[in] self   Pointer to the MicroSuiTransaction instance.
+ *
+ * @return TransactionBytes struct containing pointer and length of data.
+ *
+ * @note Full transaction building with Sui BCS serialization is not yet supported.
+ *       At this stage, TxBytes are provided manually and construction is delegated externally.
+ */
 static TransactionBytes ms_build_impl(MicroSuiTransaction *self) {
     // TODO: Implement the logic to build the transaction bytes
 
     return self->tx_bytes;
 }
 
+/**
+ * @brief Clear and free memory of a transaction.
+ *
+ * Frees any dynamically allocated memory for transaction bytes,
+ * sets the data pointer to NULL, and resets length to zero.
+ *
+ * @param[in] self   Pointer to the MicroSuiTransaction instance.
+ */
 void ms_clear_impl(MicroSuiTransaction *self) {
     if (!self) return;
     if (self->tx_bytes.data) {

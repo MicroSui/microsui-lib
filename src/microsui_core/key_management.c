@@ -6,7 +6,21 @@
 
 #include "lib/monocypher/monocypher.h"
 
-
+/**
+ * @brief Derive a Sui address from a 32-byte Ed25519 public key.
+ *
+ * Prepends the scheme flag (0x00 for Ed25519) to the public key,
+ * then computes the BLAKE2b-256 hash of the 33-byte input.
+ * The resulting 32-byte digest is the canonical Sui address.
+ *
+ * @param[in]  pubkey           32-byte Ed25519 public key.
+ * @param[out] sui_address_out  Output buffer for the 32-byte Sui address.
+ *
+ * @return 0 on success; -1 if input pointers are NULL.
+ *
+ * @note This implementation follows the Sui address derivation convention:
+ *       sui_address = blake2b_256([scheme_flag | pubkey]).
+ */
 int microsui_pubkey_to_sui_address(const uint8_t pubkey[32], uint8_t sui_address_out[32]) {
     if (!pubkey || !sui_address_out) return -1;
 
@@ -20,7 +34,20 @@ int microsui_pubkey_to_sui_address(const uint8_t pubkey[32], uint8_t sui_address
     return 0;
 }
 
-
+/**
+ * @brief Derive a 32-byte Ed25519 public key from a 32-byte private key seed.
+ *
+ * Generates the full 64-byte Ed25519 secret key internally, then extracts
+ * the corresponding public key.
+ *
+ * @param[in]  private_key  32-byte Ed25519 private key seed.
+ * @param[out] public_key   Output buffer for the 32-byte public key.
+ *
+ * @return 0 on success; -1 if input pointers are NULL.
+ *
+ * @note The private key is copied to a local buffer before use, to avoid
+ *       modifying the caller’s memory.
+ */
 int get_public_key_from_private_key(const uint8_t private_key[32], uint8_t public_key[32]) {
     if (private_key == NULL || public_key == NULL) return -1;
 
