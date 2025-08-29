@@ -26,16 +26,13 @@ int main(void) {
     // Initialize a MicroSuiTransaction object from setHarcodedTxBytes(...) constructor
     MicroSuiTransaction tx = SuiTransaction_setHarcodedTxBytes(message_string);
 
-    // Generate signature
-    SuiSignature sig = keypair.signTransaction(&keypair, message_string);
-
     // Using method1 of the client: signAndExecuteTransaction (Simpler, creates the signature internally)
     SuiTransactionBlockResponse res1 = client.signAndExecuteTransaction(&client, keypair, tx);
     if (res1.digest == NULL) {
         printf("Error: No response from Sui Network\n");
         return -1;
     }
-    printf("\n\t Sui Network RPC Response 1 (signAndExecuteTransaction method):\n\n");
+    printf("\n\n\t Sui Network RPC Response 1 (signAndExecuteTransaction method):\n\n");
     printf("\t Tx Digest= %s\n", res1.digest);
     printf("\t Tx Checkpoint= %s\n", res1.checkpoint);
     printf("\t Tx confirmedLocalExecution= %s\n", res1.confirmedLocalExecution);
@@ -46,16 +43,17 @@ int main(void) {
         printf("\t Balances Changes Coin %d:\n", i+1);
         printf("\t\t balanceChanges[%d].amount= %s\n", i, res1.balanceChanges[i].amount);
         printf("\t\t balanceChanges[%d].coinType= %s\n", i, res1.balanceChanges[i].coinType);
-        printf("\t\t balanceChanges[%d].owner= %s\n\n", i, res1.balanceChanges[i].owner);
+        printf("\t\t balanceChanges[%d].owner= %s\n", i, res1.balanceChanges[i].owner);
     }
 
-    // Using method2 of the client: executeTransactionBlock (More customizable, needs the signature as parameter)
+    /// Method 2 to send Tx to Sui Network: executeTransactionBlock (More customizable, needs the signature as parameter):
+    SuiSignature sig = keypair.signTransaction(&keypair, message_string); // We obtain the signature in base64 format
     SuiTransactionBlockResponse res2 = client.executeTransactionBlock(&client, tx.tx_bytes, sig);
-    if (res2.digest == NULL) {
-        printf("Error: No response from Sui Network\n");
-        return -1;
-    }
-    printf("\n\t Sui Network RPC Response 2 (executeTransactionBlock method) - Digest:\n%s (same)\n", res2.digest);
+    printf("\n\n\t Sui Network RPC Response 2 (executeTransactionBlock method)  -- Digest: %s (same)\n\n", res2.digest);
+
+
+    // After each Sui Execute Transaction you must call tx.clear(&tx) (To avoid memory leaks)
+    tx.clear(&tx); // VERY IMPORTANT STEP
 
     printf("\n\n\t\t --- END OF CLIENT DEMO ---\n");
 

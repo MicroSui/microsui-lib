@@ -17,7 +17,7 @@ void setup() {
 
   delay(1000);
 
-  Serial.println("\n\t\t\t --- MicroSui ESP32 - Sign and Broadcast Transaction to the Sui Network ---\n");
+  Serial.println("\n\t\t\t --- MicroSui ESP32 - Sign and Execute Transaction to the Sui Network ---\n");
 
   // WiFi connect
   MicroSuiWiFi wifi = WiFi_connect(wifi_ssid, wifi_pass);
@@ -35,27 +35,23 @@ void setup() {
   SuiTransactionBlockResponse res1 = client.signAndExecuteTransaction(&client, keypair, tx);
 
   Serial.printf("           First call (signAndExecuteTransaction function):");
-  Serial.print("   Tx Digest= "); Serial.println(res1.digest);
-  Serial.print("   Tx Checkpoint= "); Serial.println(res1.checkpoint);
-  Serial.print("   Tx confirmedLocalExecution= "); Serial.println(res1.confirmedLocalExecution);
+  Serial.print("   Tx Digest = "); Serial.println(res1.digest);
+  Serial.print("   Tx Checkpoint = "); Serial.println(res1.checkpoint);
+  Serial.print("   Tx confirmedLocalExecution = "); Serial.println(res1.confirmedLocalExecution);
 
   Serial.print("        Balance Changes: "); Serial.println(res1.balanceChanges_len);
 
   for (int i = 0; i < res1.balanceChanges_len; i++)
   {
     Serial.print("     Balance Changes Coin "); Serial.print(i+1); Serial.println(":");
-    Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].amount= "); Serial.println(res1.balanceChanges[i].amount);
-    Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].coinType= "); Serial.println(res1.balanceChanges[i].coinType);
-    Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].owner= "); Serial.println(res1.balanceChanges[i].owner);
+    Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].amount = "); Serial.println(res1.balanceChanges[i].amount);
+    Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].coinType = "); Serial.println(res1.balanceChanges[i].coinType);
+    Serial.print("   balanceChanges["); Serial.print(i); Serial.print("].owner = "); Serial.println(res1.balanceChanges[i].owner);
   }
-
-  // Generate signature for use it in
-  SuiSignature sig = keypair.signTransaction(&keypair, message_string);
-
-  // Using method2 of the client: executeTransactionBlock (More customizable, needs the signature as parameter)
-  SuiTransactionBlockResponse res2 = client.executeTransactionBlock(&client, tx.tx_bytes, sig);
   
-  Serial.print("           Second call (executeTransactionBlock function) - Digest= "); Serial.println(res2.digest);
+
+  // After each Sui Execute Transaction you must call tx.clear(&tx) (To avoid memory leaks)
+  tx.clear(&tx); // VERY IMPORTANT STEP
 
   wifi.disconnect(&wifi);
 }
