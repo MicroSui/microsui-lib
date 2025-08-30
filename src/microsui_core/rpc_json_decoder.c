@@ -21,7 +21,7 @@
 #endif
 
 #ifndef JSMN_MAX_TOKENS
-#define JSMN_MAX_TOKENS      8000
+#define JSMN_MAX_TOKENS      4000
 #endif
 
 // ---------- Public structs ----------
@@ -221,7 +221,7 @@ static void fill_balance_changes(SuiTransactionBlockResponse* out, const jsmn_ct
  *       `arena_reset()` and `arena_copy_cstr()` are used internally.
  */
 int microsui_generate_tx_block_response_from_json(const char* json, SuiTransactionBlockResponse* out) {
-    static jsmntok_t tokens[JSMN_MAX_TOKENS]; // ok que sea static para no gastar stack
+    static jsmntok_t tokens[JSMN_MAX_TOKENS];
     jsmn_ctx ctx;
 
     if (!out) return -1;
