@@ -48,4 +48,5 @@ void loop() {
   delay(700);
   digitalWrite(LED_BUILTIN, LOW);   // turn LED off
   delay(700);
+  Serial.println(F("\n  Done. Reboot the board to run the example again."));
 }
