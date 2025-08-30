@@ -12,6 +12,7 @@ const char* sui_private_key_bech32 =
   "suiprivkey1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq509duq";
 
 // --- Prebuilt TxBytes (generated externally, for now no BCS building inside MicroSui) ---
+// --- For now, generate your Tx Build Message in HEX with `await tx.build({ client });` in the Mysten Sui Typescript SDK ---
 const char* message_string =
   "000002000800e1f5050000000000202e3d52393c9035afd1ef38abd7fce2dad71f0e276b522fb274f4e14d1df97472"
   "02020001010000010103000000000101007a1378aafadef8ce743b72e8b248295c8f61c102c94040161146ea4d51a1"
@@ -66,6 +67,7 @@ void setup() {
     if (res1.balanceChanges[i].coinType) { Serial.print(F("        coinType: ")); Serial.println(res1.balanceChanges[i].coinType); }
     if (res1.balanceChanges[i].owner)    { Serial.print(F("        owner: "));    Serial.println(res1.balanceChanges[i].owner); }
   }
+  Serial.print(F("\n"));
 
   // Clean transaction (important to avoid memory leaks)
   tx.clear(&tx);
