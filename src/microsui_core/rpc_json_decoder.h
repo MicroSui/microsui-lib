@@ -17,7 +17,7 @@
 #endif
 
 #ifndef JSMN_MAX_TOKENS
-#define JSMN_MAX_TOKENS      8000
+#define JSMN_MAX_TOKENS      4000
 #endif
 
 // ---------- Public structs ----------
