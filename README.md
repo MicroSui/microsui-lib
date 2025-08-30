@@ -1,8 +1,12 @@
 # MicroSui C Library --- _microsui-lib_
 
+MicroSui Library is a lightweight C library designed primarily for embedded systems to interact with the Sui Network Blockchain.
+
+Full compatibility with _ESP32 microcontrollers_ and _traditional desktop OS_. More device support coming soon.
+
 This library is **_Arduino and PlatformIO Compatible_**
 
-[![microsui-lib on Arduino Registry](https://img.shields.io/badge/Arduino-microsui--lib-blue.svg)](https://www.ardu-badge.com/MicroSui)
+[![microsui-lib on Arduino Registry](https://www.ardu-badge.com/badge/MicroSui.svg)](https://www.ardu-badge.com/MicroSui/ide)
 [![PlatformIO Registry](https://badges.registry.platformio.org/packages/gustavogb/library/microsui-lib.svg)](https://registry.platformio.org/libraries/gustavogb/microsui-lib)
 
 ## The Library:
@@ -98,7 +102,7 @@ microsui-lib/
 
 This library is fully compatible with Arduino and is listed in the official Arduino Library Registry.
 
-[![microsui-lib on Arduino Registry](https://img.shields.io/badge/Arduino-microsui--lib-blue.svg)](https://registry.arduino.cc/libraries/microsui-lib)
+[![microsui-lib on Arduino Registry](https://www.ardu-badge.com/badge/MicroSui.svg)](https://www.ardu-badge.com/MicroSui/ide)
 
 ## 👽 PlatformIO Compatibility
 
