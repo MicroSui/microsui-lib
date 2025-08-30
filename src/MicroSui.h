@@ -6,9 +6,28 @@
 extern "C" {
 #endif
 
-#include "sign.h"
-#include "utils.h"
-#include "cryptography.h"
+#include <stdint.h>
+#include <stddef.h>
+
+// OO-style headers
+#include "Keypair.h"
+#include "Transaction.h"
+#include "Client.h"
+#include "WiFi.h"
+
+// MicroSui core headers
+#include "microsui_core/sign.h"
+#include "microsui_core/cryptography.h"
+#include "microsui_core/key_management.h"
+#include "microsui_core/byte_conversions.h"
+#include "microsui_core/rpc_json_builder.h"
+#include "microsui_core/rpc_json_decoder.h"
+#include "microsui_core/http_router.h"
+#include "microsui_core/wifi_router.h"
+
+// Utility headers
+#include "microsui_core/utils/string_builder.h"
+#include "microsui_core/utils/string_utils.h"
 
 #ifdef __cplusplus
 }
