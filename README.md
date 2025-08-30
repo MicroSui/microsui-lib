@@ -45,49 +45,40 @@ You will find the `.out` binaries to run in each example folder.
 
 ```yaml
 microsui-lib/
-├── include/                 # Public header files (API)
+├── include/                        # Public header files (API)
 │   └── microsui/
-│       ├── sign.h
-│       ├── cryptography.h
-│       └── byte_conversions.h
-├── src/                     # Library source files (.c)
-│   ├── lib/                 # Third-party dependencies
-│   │   ├── monocypher/
-│   │   └── compact25519/
-│   │       └── c25519/
-│   ├── sign.c
-│   ├── cryptography.c
-│   ├── byte_conversions.c
-│   └── MicroSui.h           # Arduino header (must be in src)
-├── examples/                # Usage examples
+│       └── *.h
+├── src/                            # Library source files (.c)
+│   ├── microsui_core
+│   │   ├── lib/                    # Third-party dependencies
+│   │   │   ├── monocypher/
+│   │   │   ├── compact25519/
+│   │   │   │   └── c25519/
+│   │   │   └── jsmn/
+│   │   ├── impl/                   # Platform/board specific implementation
+│   │   │   ├── http/
+│   │   │   └── wifi/
+│   │   ├── utils/                  # MicroSui utils
+│   │   ├── byte_conversions.c
+│   │   ├── cryptography.c
+│   │   ├── http_router.h  #(implementation)
+│   │   ├── key_managment.c
+│   │   ├── rpc_json_builder.c
+│   │   ├── sign.c
+│   │   └── wifi_router.h  #(implementation)
+│   ├── Client.c                    # OO-style Client.c
+│   ├── Keypair.c                   # OO-style Keypair.c
+│   ├── Transaction.c               # OO-style Transaction.c
+│   ├── WiFi.c                      # OO-style WiFi.c
+│   └── MicroSui.h                  # Arduino header (must be in src)
+├── examples/                       # Usage examples
 │   ├── ArduinoExamples/
-│   ├── offline_sign/
-│   ├── offline_sign_with_bech32_privkey/
-│   └── encode_decode_privkey/
-├── library.properties       # Enables Arduino library compatibility
-├── library.json             # Enables PlatformIO library compatibility
-└── Makefile                 # Root Makefile to build all examples
+│   ├── core-examples/
+│   ├── sdk-examples/
+├── library.properties              # Enables Arduino library compatibility
+├── library.json                    # Enables PlatformIO library compatibility
+└── Makefile                        # Root Makefile to build all examples
 ```
-
-## ✅ Implemented So Far
-
-### 📚 Library (`/src`)
-
-- `sign.c`:  
-  Core implementation of the message signing logic using `monocypher` and `compact25519`.
-- `cryptography.c`:  
-  Core cryptographic utilities for encoding, decoding, key transformations, and other format-related operations, including Bech32 support.
-- `byte_conversions.c`:  
-  Useful complementary functions to be used by other library functions or by the user.
-
-### 📂 Public Headers (`/include`)
-
-- `microsui/sign.h`:  
-  Public API header exposing the MicroSui Sign functions.
-- `microsui/cryptography.h`:  
-  Public API header exposing the MicroSui Cryptography functions.
-- `microsui/byte_conversions.h`:  
-  Public API header exposing useful complementary functions.
 
 ### 📦 Dependencies (`/lib`)
 
@@ -95,38 +86,8 @@ microsui-lib/
   Lightweight cryptographic primitives.
 - `compact25519`:  
   Ed25519 key format support.
-
-### 🧪 Examples
-
-#### Offline Sign (`/examples/offline_sign`)
-
-- `offline_sign.c`:  
-  Demonstrates how to sign a Sui transaction offline using a raw 32-byte private key.
-- `constants.c` & `constants.h`:  
-  Helper files providing a test private key and related constants.
-- `Makefile`:  
-  Builds the example with all dependencies automatically.
-- Output binary: `offline_sign.out`
-
-#### Offline Sign with Bech32 Private Key (`/examples/offline_sign_with_bech32_privkey`)
-
-- `offline_sign_with_bech32_privkey.c`:  
-  Demonstrates how to sign a Sui transaction offline using a Sui compatible bech32 private key.
-- `constants.c` & `constants.h`:  
-  Helper files providing a test private key and related constants.
-- `Makefile`:  
-  Builds the example with all dependencies automatically.
-- Output binary: `offline_sign_with_bech32_privkey.out`
-
-#### Encode & Decode Bech32 Private Keys (`/examples/encode_decode_privkey`)
-
-- `encode_decode_privkey.c`:  
-  Demonstrates how to encode and decode Sui compatible bech32 private keys.
-- `constants.c` & `constants.h`:  
-  Helper files providing a test private key and related constants.
-- `Makefile`:  
-  Builds the example with all dependencies automatically.
-- Output binary: `encode_decode_privkey.out`
+- `jsmn`:
+  Lightweight minimalistic JSON parser for C.
 
 ### 🛠️ Global Makefile
 

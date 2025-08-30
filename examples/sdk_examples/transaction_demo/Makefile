@@ -19,7 +19,7 @@ WIFI_UNSUPPORTED_FILE = $(MICROSUI_CORE)/impl/wifi/wifi_unsupported.c # This fil
 
 CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(MICROSUI_CORE) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519) -I$(JSMN)
 
-SOURCES := encode_decode_privkey.c \
+SOURCES := transaction_demo.c \
 			$(SRC)/*.c \
 			$(MICROSUI_CORE)/*.c \
 			$(UTILS)/*.c \
@@ -32,7 +32,7 @@ SOURCES := encode_decode_privkey.c \
 			$(WIFI_DESKTOP_FILE) \
 			$(WIFI_UNSUPPORTED_FILE)
 
-OUTPUT := encode_decode_privkey.out
+OUTPUT := transaction_demo.out
 
 all: clean_before_build $(OUTPUT)
 
@@ -49,4 +49,3 @@ clean_before_build:
 clean:
 	@echo "Removing binary..."
 	@rm -f $(OUTPUT)
-

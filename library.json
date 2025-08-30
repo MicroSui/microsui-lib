@@ -22,15 +22,17 @@
         "srcDir": ".",
         "includeDir": "include",
         "flags": [
-            "-Isrc/lib/monocypher",
-            "-Isrc/lib/compact25519",
-            "-Isrc/lib/compact25519/c25519"
+            "-Isrc/microsui_core/lib/monocypher",
+            "-Isrc/microsui_core/lib/compact25519",
+            "-Isrc/microsui_core/lib/compact25519/c25519"
         ],
         "srcFilter": [
             "+<src/*.c>",
-            "+<src/lib/monocypher/*.c>",
-            "+<src/lib/compact25519/*.c>",
-            "+<src/lib/compact25519/c25519/*.c>"
+            "+<src/microsui_core/*.c>",
+            "+<src/microsui_core/utils/*.c>",
+            "+<src/microsui_core/lib/monocypher/*.c>",
+            "+<src/microsui_core/lib/compact25519/*.c>",
+            "+<src/microsui_core/lib/compact25519/c25519/*.c>"
         ]
     }
 }
