@@ -12,9 +12,30 @@
 
 #define MAX_LENGTH_SUI_MESSAGE 174636 // Maximum length for Sui message in bytes 128k (174764 bytes in base64 = 128kB)
 
-// Function to prepare the JSON for executing a Sui transaction block
-// This function takes a Sui signature and a Sui message, encodes them in Base64, and constructs a JSON-RPC request string
-// Documentation: https://docs.sui.io/sui-api-ref#sui_executetransactionblock
+/**
+ * @brief Prepare a JSON-RPC request to execute a Sui transaction block.
+ *
+ * Takes a Sui signature and a serialized transaction message, encodes both
+ * into Base64, and constructs a JSON string compatible with the
+ * `sui_executeTransactionBlock` RPC method.
+ *
+ * The resulting JSON includes flags to request transaction effects, events,
+ * object changes, and balance changes in the RPC response.
+ *
+ * @param[in] sui_sig     Pointer to a 97-byte Sui signature (scheme + sig + pubkey).
+ * @param[in] sui_msg     Pointer to the serialized Sui transaction bytes.
+ * @param[in] sui_msg_len Length of the serialized transaction in bytes.
+ *
+ * @return Pointer to a heap-allocated null-terminated JSON string, or NULL on error.
+ *         The caller is responsible for freeing this buffer with `free()`.
+ *
+ * @note Base64-encoded signature length is fixed (132 characters), while message
+ *       length varies depending on the transaction size.
+ * @note If input validation or Base64 encoding fails, the function returns NULL.
+ * @note Maximum supported message length is ~128 KB (174,636 bytes raw).
+ *
+ * @see Sui Official Documentation: https://docs.sui.io/sui-api-ref#sui_executetransactionblock
+ */
 char* microsui_prepare_executeTransactionBlock(const uint8_t sui_sig[97], const uint8_t* sui_msg, size_t sui_msg_len) {
     const char* execute_method = "sui_executeTransactionBlock";
 

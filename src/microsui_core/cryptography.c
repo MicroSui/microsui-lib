@@ -102,6 +102,22 @@ static void bech32_create_checksum(const char *hrp, const uint8_t *data, size_t 
     }
 }
 
+/**
+ * @brief Decode a Sui Bech32 private key string into 32 raw bytes.
+ *
+ * Validates the Bech32-encoded private key (HRP = "suiprivkey", no mixed case),
+ * converts the 5-bit words back to 8-bit bytes, and extracts the 32-byte secret
+ * (sk) after the 1-byte scheme flag.
+ *
+ * @param[in]  privkey_bech          Null-terminated Bech32 string ("suiprivkey1...").
+ * @param[out] privkey_bytes_output  Output buffer for the 32-byte secret key.
+ *
+ * @return 0 on success; -1 on invalid length/format, mixed case, bad alphabet,
+ *         conversion failure, or unexpected payload size.
+ *
+ * @note Expects total string length == PK_BECH32_LEN. Mixed case is rejected.
+ * @note The returned key is the 32-byte seed; callers must handle it securely.
+ */
 int microsui_decode_sui_privkey(const char *privkey_bech, uint8_t privkey_bytes_output[32]) {
     size_t len = strlen(privkey_bech);
     if (len != PK_BECH32_LEN) return -1;
@@ -157,6 +173,22 @@ int microsui_decode_sui_privkey(const char *privkey_bech, uint8_t privkey_bytes_
     return 0;
 }
 
+/**
+ * @brief Encode a 32-byte Sui private key into a Bech32 string.
+ *
+ * Builds the Bech32 payload as: [1-byte scheme flag (0x00) | 32-byte secret],
+ * converts to 5-bit words, appends checksum, and writes the Bech32 string with
+ * HRP = "suiprivkey".
+ *
+ * @param[in]  privkey_bytes        Pointer to the 32-byte secret key.
+ * @param[out] privkey_bech_output  Output buffer for the null-terminated Bech32 string.
+ *                                  Must have capacity >= PK_BECH32_LEN + 1.
+ *
+ * @return 0 on success; -1 on conversion failure or insufficient output capacity.
+ *
+ * @note The output uses lowercase Bech32 alphabet and includes the null terminator.
+ * @note Callers are responsible for providing a sufficiently large output buffer.
+ */
 int microsui_encode_sui_privkey(const uint8_t *privkey_bytes, char *privkey_bech_output) {
     const char *hrp = "suiprivkey";
     const uint8_t scheme_flag = 0x00;

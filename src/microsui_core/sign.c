@@ -24,6 +24,24 @@ size_t build_message_with_intent(const uint8_t *tx_bytes, const size_t tx_len, u
     return offset; // Total length of messageWithIntent
 }
 
+/**
+ * @brief Sign a message digest using Ed25519 and produce a Sui-formatted signature.
+ *
+ * Builds the "message with intent" (prefix + tx bytes), digests it with BLAKE2b,
+ * signs the digest with Ed25519, and encodes the result in the Sui signature
+ * format (scheme byte + 64-byte Ed25519 signature + 32-byte public key).
+ *
+ * @param[out] sui_sig       Output buffer for the Sui signature (must be 97 bytes).
+ * @param[in]  message       Pointer to raw transaction bytes (already serialized).
+ * @param[in]  message_len   Length of the transaction bytes.
+ * @param[in]  private_key   32-byte Ed25519 private key seed.
+ *
+ * @return 0 on success, negative value on error.
+ *
+ * @note The resulting signature is encoded as:
+ *       [0x00 scheme | 64-byte signature | 32-byte public key].
+ * @note This function is specific to the Ed25519 scheme.
+ */
 int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len, const uint8_t private_key[32]) {
     // 1. Copy private key to a local variable
     uint8_t private_key_cp[32];
@@ -52,6 +70,25 @@ int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const siz
     return 0;
 }
 
+/**
+ * @brief Generic signing entry point for multiple signature schemes.
+ *
+ * Dispatches to the appropriate signing routine depending on the provided
+ * scheme identifier. Currently only Ed25519 (0x00) is implemented.
+ *
+ * @param[in]  scheme        Identifier of the signing scheme (0x00 = Ed25519).
+ * @param[out] sui_sig       Output buffer for the Sui signature (must be 97 bytes).
+ * @param[in]  message       Pointer to the message/transaction bytes.
+ * @param[in]  message_len   Length of the message in bytes.
+ * @param[in]  private_key   32-byte private key seed (scheme dependent).
+ *
+ * @return 0 on success if scheme is supported,
+ *         -1 if the scheme is not implemented or unsupported.
+ *
+ * @note Supported schemes:
+ *       - 0x00: Ed25519 (implemented).
+ *       - Others (Secp256k1, Secp256r1, Multisig, zkLogin, Passkey) are not yet implemented.
+ */
 int microsui_sign(uint8_t scheme, uint8_t sui_sig[97], const uint8_t* message, const size_t message_len, const uint8_t private_key[32]) {
     switch (scheme) {
         case 0x00: // Pure Ed25519

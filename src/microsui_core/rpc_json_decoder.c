@@ -202,7 +202,24 @@ static void fill_balance_changes(SuiTransactionBlockResponse* out, const jsmn_ct
     }
 }
 
-// ---------- Public functions ----------
+/**
+ * @brief Parse a JSON string into a SuiTransactionBlockResponse structure.
+ *
+ * Uses the JSMN JSON parser to tokenize the input string and extract
+ * relevant fields of a transaction block response. Populates the provided
+ * output struct with parsed data such as balance changes, checkpoint,
+ * confirmedLocalExecution, and digest.
+ *
+ * @param[in]  json   Null-terminated JSON string containing the transaction block response.
+ * @param[out] out    Pointer to an initialized SuiTransactionBlockResponse struct.
+ *
+ * @return 0 on success; non-zero error code if parsing failed.
+ *
+ * @note A static token buffer is used internally to reduce stack usage.
+ * @note On parse error, the `digest` field in `out` is set to "[parse_error]".
+ * @note The output struct must be arena-managed; helper functions like
+ *       `arena_reset()` and `arena_copy_cstr()` are used internally.
+ */
 int microsui_generate_tx_block_response_from_json(const char* json, SuiTransactionBlockResponse* out) {
     static jsmntok_t tokens[JSMN_MAX_TOKENS]; // ok que sea static para no gastar stack
     jsmn_ctx ctx;
