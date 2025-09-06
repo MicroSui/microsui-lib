@@ -1,6 +1,6 @@
 {
     "name": "microsui-lib",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "MicroSui Library is a lightweight C library for embedded systems to interact with the Sui Network Blockchain",
     "keywords": "microsui, sui, blockchain, sui-network, walrus, cryptography, c-library",
     "repository": {
