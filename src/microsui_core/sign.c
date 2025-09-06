@@ -9,21 +9,6 @@
 #include "lib/monocypher/monocypher.h"
 #include "lib/compact25519/compact_ed25519.h"
 
-size_t build_message_with_intent(const uint8_t *tx_bytes, const size_t tx_len, uint8_t *output) {
-    size_t offset = 0;
-
-    // Setting Intent
-    output[offset++] = 0x00; // scope: 0x00 is TransactionData (we need this in this case)
-    output[offset++] = 0x00; // version: V0
-    output[offset++] = 0x00; // appId: Sui
-
-    // Copying tx_bytes in output
-    memcpy(output + offset, tx_bytes, tx_len);
-    offset += tx_len;
-
-    return offset; // Total length of messageWithIntent
-}
-
 /**
  * @brief Sign a message digest using Ed25519 and produce a Sui-formatted signature.
  *
@@ -47,16 +32,22 @@ int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const siz
     uint8_t private_key_cp[32];
     memcpy(private_key_cp, private_key, 32);
 
-    // 2. Generate public key
+    // 2. Generate public and secret key
     uint8_t public_key[32];
     uint8_t secret_key[64];
     crypto_ed25519_key_pair(secret_key, public_key, private_key_cp);
 
-    // 3. Generate digest using BLAKE2b with the message whit the intent
-    uint8_t message_with_intent[512];
-    uint8_t message_with_intent_len = build_message_with_intent(message, message_len, message_with_intent);
+    // 3. Generate digest using BLAKE2b with the message with the intent
     uint8_t digest[32];
-    crypto_blake2b(digest, 32, message_with_intent, message_with_intent_len);
+
+    crypto_blake2b_ctx ctx;
+    crypto_blake2b_init(&ctx, 32);
+    
+    const uint8_t intent[3] = {0x00, 0x00, 0x00};
+    crypto_blake2b_update(&ctx, intent, sizeof intent);
+    crypto_blake2b_update(&ctx, message, message_len);
+    
+    crypto_blake2b_final(&ctx, digest);
 
     // 4. Sign the digest using Ed25519 with the private key and public key
     uint8_t ed25519_signature[64];
@@ -66,6 +57,11 @@ int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const siz
     sui_sig[0] = 0x00;  // Ed25519 Scheme
     memcpy(sui_sig + 1, ed25519_signature, 64);
     memcpy(sui_sig + 65, public_key, 32);
+
+    crypto_wipe(secret_key, sizeof secret_key);
+    crypto_wipe(private_key_cp, sizeof private_key_cp);
+    crypto_wipe(&ctx, sizeof ctx);
+    crypto_wipe(digest, sizeof digest);
 
     return 0;
 }
