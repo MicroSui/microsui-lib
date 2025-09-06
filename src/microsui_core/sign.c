@@ -10,7 +10,7 @@
 #include "lib/compact25519/compact_ed25519.h"
 
 /**
- * @brief Sign a message digest using Ed25519 and produce a Sui-formatted signature.
+ * @brief Sign a Sui Transaction message using Ed25519 and produce a Sui-formatted signature.
  *
  * Builds the "message with intent" (prefix + tx bytes), digests it with BLAKE2b,
  * signs the digest with Ed25519, and encodes the result in the Sui signature
@@ -107,4 +107,32 @@ int microsui_sign(uint8_t scheme, uint8_t sui_sig[97], const uint8_t* message, c
         default:
             return -1; // Unsupported scheme
     }
+}
+
+
+///  DEPRECATED FUNCTIONS  ///
+/**
+ * @brief [DEPRECATED] Use microsui_sign() or microsui_sign_ed25519() instead.
+ *
+ * @deprecated This function is kept only for backward compatibility.
+ *             Please use microsui_sign() or microsui_sign_ed25519(),
+ *             which provide better compatibility and performance.
+ *
+ * @param[out] sui_sig       Output buffer for the Sui signature (must be 97 bytes).
+ * @param[in]  message_hex   Null-terminated string containing the full serialized tx message in hexa form.
+ * @param[in]  private_key   32-byte Ed25519 private key seed.
+ *
+ * @return 0 on success, negative value on error.
+ */
+int microsui_sign_message(uint8_t sui_sig[97], const char* message_hex, const uint8_t private_key[32]) {
+    // Convert the hex message to binary bytes
+    size_t msg_len = strlen(message_hex) / 2;  // 2 hex chars = 1 byte
+    uint8_t* message = (uint8_t*)malloc(msg_len);
+    hex_to_bytes(message_hex, message, msg_len);
+
+    // Call the new ED25519 sign function version
+    int res = microsui_sign_ed25519(sui_sig, message, msg_len, private_key);
+
+    free(message);
+    return res;
 }
