@@ -8,4 +8,9 @@ int microsui_sign(uint8_t scheme, uint8_t sui_sig[97], const uint8_t* message, c
 
 int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len, const uint8_t private_key[32]);
 
+/**
+ * @deprecated  Use microsui_sign() or microsui_sign_ed25519() instead.
+ */
+int microsui_sign_message(uint8_t sui_sig[97], const char* message_hex, const uint8_t private_key[32]);
+
 #endif

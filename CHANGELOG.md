@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## \[0.3.1] - 2025-09-06
+
+Hotfix release addressing a signing buffer bug and restoring backward compatibility.
+
+### Fixed
+
+- Fixed bug with small message buffer in sign function.
+
+### Changed
+
+- Reintroduced `microsui_sign_message` as **deprecated** for backward compatibility.
+
 ## \[0.3.0] - 2025-08-30
 
 - Added `microsui_http_post`, the first implementation of end-to-end transaction execution towards the Sui Network using HTTP(S) POST.
