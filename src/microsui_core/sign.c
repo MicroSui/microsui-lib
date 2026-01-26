@@ -109,6 +109,38 @@ int microsui_sign(uint8_t scheme, uint8_t sui_sig[97], const uint8_t* message, c
     }
 }
 
+int microsui_verify_signature_ed25519(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len) {
+    if(sui_sig[0] != 0x00) {
+        return -1; // This is not an Ed25519 signature
+    }
+
+    uint8_t signature[64];
+    memcpy(signature, sui_sig + 1, 64);
+
+    uint8_t public_key[32];
+    memcpy(public_key, sui_sig + 65, 32);
+
+    uint8_t digest[32];
+    crypto_blake2b_ctx ctx;
+    crypto_blake2b_init(&ctx, 32);
+    const uint8_t intent[3] = {0x00, 0x00, 0x00};
+    crypto_blake2b_update(&ctx, intent, sizeof intent);
+    crypto_blake2b_update(&ctx, message, message_len);
+    crypto_blake2b_final(&ctx, digest);
+
+    if(compact_ed25519_verify(signature, public_key, digest, 32)) return 0; 
+    else return -1;
+}
+
+int microsui_verify_signature(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len) {
+    switch (sui_sig[0]) {
+        case 0x00: // Ed25519
+            return microsui_verify_signature_ed25519(sui_sig, message, message_len);
+        default:
+            return -1; // Unsupported scheme
+    }
+}
+
 
 ///  DEPRECATED FUNCTIONS  ///
 /**
