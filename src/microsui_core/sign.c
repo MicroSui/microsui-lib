@@ -109,6 +109,26 @@ int microsui_sign(uint8_t scheme, uint8_t sui_sig[97], const uint8_t* message, c
     }
 }
 
+/**
+ * @brief Verify a Sui-formatted Ed25519 signature against a Sui Transaction message.
+ *
+ * Expects a Sui signature encoded as:
+ *   [0x00 scheme | 64-byte Ed25519 signature | 32-byte public key]
+ *
+ * Rebuilds the Sui "message with intent" (prefix + tx bytes), digests it with
+ * BLAKE2b-256, and verifies the Ed25519 signature using the embedded public key.
+ *
+ * @param[in] sui_sig        Pointer to the Sui signature buffer (must be 97 bytes).
+ * @param[in] message        Pointer to raw transaction bytes (already serialized).
+ * @param[in] message_len    Length of the transaction bytes.
+ *
+ * @return 0 if the signature is valid,
+ *         -1 if the signature is invalid or the scheme byte is not Ed25519 (0x00).
+ *
+ * @note The "intent" prefix used is {0x00, 0x00, 0x00}, matching the signing routine.
+ * @note This function does not recover a public key; it verifies using the public key
+ *       embedded inside the Sui signature payload.
+ */
 int microsui_verify_signature_ed25519(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len) {
     if(sui_sig[0] != 0x00) {
         return -1; // This is not an Ed25519 signature
@@ -132,6 +152,23 @@ int microsui_verify_signature_ed25519(uint8_t sui_sig[97], const uint8_t* messag
     else return -1;
 }
 
+/**
+ * @brief Generic signature verification entry point for multiple signature schemes.
+ *
+ * Dispatches to the appropriate verification routine based on the scheme byte
+ * found in the provided Sui signature (sui_sig[0]).
+ *
+ * @param[in] sui_sig        Pointer to the Sui signature buffer (must be 97 bytes).
+ * @param[in] message        Pointer to the message/transaction bytes (already serialized).
+ * @param[in] message_len    Length of the message in bytes.
+ *
+ * @return 0 if the signature is valid for the detected scheme,
+ *         -1 if the scheme is unsupported or verification fails.
+ *
+ * @note Currently supported schemes:
+ *       - 0x00: Ed25519 (implemented).
+ *       - Others (Secp256k1, Secp256r1, Multisig, zkLogin, Passkey) are not yet implemented.
+ */
 int microsui_verify_signature(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len) {
     switch (sui_sig[0]) {
         case 0x00: // Ed25519
