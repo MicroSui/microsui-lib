@@ -26,8 +26,18 @@ int main() {
 
     // Generating the Sui Signature from the message and private key (private_key is in constant.h)
     uint8_t sui_sig[97];
+    printf("\n\n\n  Generating Signature...\n");
     microsui_sign_ed25519(sui_sig, message, message_len, private_key);
-    printf("\n\n\n  Generating Signature...\n\n");
+    printf("\t Signature created successfully\n");
+
+    // Verifying the Sui Signature
+    int verification_result = microsui_verify_signature(sui_sig, message, message_len);
+    if(verification_result == 0) {
+        printf("\t Signature verified successfully\n\n");
+    } else {
+        printf("\t Signature verification failed\n");
+        printf("\t Error code: %d\n\n", verification_result);
+    }
 
     // Printing the Sui Signature in hex format
     char sui_sig_hex[195]; // 2 hex chars per byte + null terminator
