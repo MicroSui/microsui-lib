@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "Keypair.h"
+#include "MicroSui.h"
 
 int main(void) {
     printf("\n\t\t\t --- MicroSui KEYPAIR DEMO ---");

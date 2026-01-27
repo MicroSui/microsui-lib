@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "Client.h"
+#include "MicroSui.h"
 
 /// CONSTANTS
 // RPC NODE Url (you can change it to mainnet or local node)

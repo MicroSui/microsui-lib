@@ -1,6 +1,8 @@
 # MicroSui C Library --- _microsui-lib_
 
-MicroSui Library is a lightweight C library designed primarily for embedded systems to interact with the Sui Network Blockchain.
+<img src="assets/microsui-with-sui.png" align="right" height="190" />
+
+*MicroSui Library* is a lightweight C library designed primarily for embedded systems to interact with the ***Sui Network Blockchain***.
 
 Full compatibility with _ESP32 microcontrollers_ and _traditional desktop OS_. More device support coming soon.
 
@@ -78,7 +80,7 @@ microsui-lib/
 ├── examples/                       # Usage examples
 │   ├── ArduinoExamples/
 │   ├── core-examples/
-│   ├── sdk-examples/
+│   └── sdk-examples/
 ├── library.properties              # Enables Arduino library compatibility
 ├── library.json                    # Enables PlatformIO library compatibility
 └── Makefile                        # Root Makefile to build all examples
