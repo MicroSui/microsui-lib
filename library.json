@@ -19,7 +19,7 @@
     "frameworks": "*",
     "platforms": "*",
     "build": {
-        "srcDir": ".",
+        "srcDir": "src",
         "includeDir": "include",
         "flags": [
             "-Isrc/microsui_core/lib/monocypher",
@@ -27,12 +27,18 @@
             "-Isrc/microsui_core/lib/compact25519/c25519"
         ],
         "srcFilter": [
-            "+<src/*.c>",
-            "+<src/microsui_core/*.c>",
-            "+<src/microsui_core/utils/*.c>",
-            "+<src/microsui_core/lib/monocypher/*.c>",
-            "+<src/microsui_core/lib/compact25519/*.c>",
-            "+<src/microsui_core/lib/compact25519/c25519/*.c>"
+            "+<*.c>",
+            "+<*.cpp>",
+            "+<microsui_core/*.c>",
+            "+<microsui_core/utils/*.c>",
+            "+<microsui_core/lib/monocypher/*.c>",
+            "+<microsui_core/lib/compact25519/*.c>",
+            "+<microsui_core/lib/compact25519/c25519/*.c>",
+            "+<microsui_core/lib/jsmn/*.c>",
+            "-<microsui_core/impl/http/*.c>",
+            "-<microsui_core/impl/http/*.cpp>",
+            "-<microsui_core/impl/wifi/*.c>",
+            "-<microsui_core/impl/wifi/*.cpp>"
         ]
     }
 }
