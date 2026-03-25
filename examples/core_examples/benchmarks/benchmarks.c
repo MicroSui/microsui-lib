@@ -57,11 +57,18 @@ int main() {
 
     printf("\t Benchmarks Results:\n");
     printf("\t\t Time taken for signing: ");
-    printf("%llu ms\n", time_taken_signature);
+    if (time_taken_signature > 100000) {
+        printf("%llu ms\n", time_taken_signature / 1000);
+    } else {
+        printf("%.2f ms (%llu us) \n", (double)time_taken_signature / 1000.0, time_taken_signature);
+    }
 
     printf("\t\t Time taken for verification: ");
-    printf("%llu ms\n", time_taken_verification);
-
+    if (time_taken_verification > 100000) {
+        printf("%llu ms\n", time_taken_verification / 1000);    
+    } else {
+        printf("%.2f ms (%llu us) \n", (double)time_taken_verification / 1000.0, time_taken_verification);
+    }
     printf("\n End of benchmarks.\n");
 
     return 0;
@@ -78,12 +85,12 @@ uint64_t millis(void)
         QueryPerformanceFrequency(&freq);
 
     QueryPerformanceCounter(&now);
-    return (uint64_t)((now.QuadPart * 1000) / freq.QuadPart);
+    return (uint64_t)((now.QuadPart * 1000000) / freq.QuadPart);
 
 #else
     // Linux y macOS: clock_gettime(CLOCK_MONOTONIC)
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    return (uint64_t)(ts.tv_sec * 1000ULL) + (ts.tv_nsec / 1000000ULL);
+    return (uint64_t)(ts.tv_sec) + (ts.tv_nsec / 1000ULL);
 #endif
 }
