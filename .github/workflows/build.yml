@@ -14,6 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Add apt repository for build tools
+        uses: sudo add-apt-repository 'deb http://mirrors.kernel.org/ubuntu focal-updates main'
+
+      - name: Update package lists
+        run: sudo apt update
+
       - name: Install build tools
         run: sudo apt install -y libcurl4-openssl-dev pkg-config build-essential
 
