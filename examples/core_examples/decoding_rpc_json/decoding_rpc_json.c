@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include "microsui/rpc_json_decoder.h"
+
+#include "MicroSui.h"
 
 int main() {
     printf("\t\t Generate Sui Treansaction Block Response Object from RPC JSON Response\n\n");

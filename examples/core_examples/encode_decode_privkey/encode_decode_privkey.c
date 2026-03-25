@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include "microsui/cryptography.h"
+
+#include "MicroSui.h"
 
 const char *private_key_1_bech32 = "suiprivkey1qqqsyqcyq5rqwzqfpg9scrgwpugpzysnzs23v9ccrydpk8qarc0jqa4ffsr";
 
