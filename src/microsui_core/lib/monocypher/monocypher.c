@@ -3382,6 +3382,71 @@ int crypto_ed25519_ph_check(const uint8_t sig[64], const uint8_t pk[32],
 }
 
 
+// Added by MicroSui: Ed25519 signature (pure / RFC 8032) using SHA-512.
+// This function is byte-for-byte compatible with compact25519/ref10.
+// It does NOT replace Monocypher's crypto_ed25519_sign (which uses BLAKE2b).
+// secret_key layout: seed[32] || public_key[32]
+// signature layout : R[32] || S[32]
+// Precondition: if message_size > 0, message must be non-NULL.
+void crypto_ed25519_sign_sha512(uint8_t signature[64],
+                                const uint8_t secret_key[64],
+                                const uint8_t *message,
+                                size_t message_size)
+{
+    u8 a[64];   // a[0..31]=scalar (clamped), a[32..63]=prefix
+    u8 r64[64]; // full hash for r
+    u8 h64[64]; // full hash for h
+    u8 r[32];
+    u8 h[32];
+    u8 R[32];
+
+    crypto_sha512_ctx sha;
+
+    // 1) a || prefix = SHA512(seed); clamp(a)
+    crypto_sha512_init(&sha);
+    crypto_sha512_update(&sha, secret_key, 32);   // seed
+    crypto_sha512_final(&sha, a);
+    crypto_eddsa_trim_scalar(a, a);               // clamp first 32 bytes
+
+    // 2) r = SHA512(prefix || message) mod L
+    crypto_sha512_init(&sha);
+    crypto_sha512_update(&sha, a + 32, 32);       // prefix
+    if (message_size) { crypto_sha512_update(&sha, message, message_size); }
+    crypto_sha512_final(&sha, r64);
+    crypto_eddsa_reduce(r, r64);
+
+    // 3) R = [r]B
+    crypto_eddsa_scalarbase(R, r);
+
+    // 4) h = SHA512(R || public_key || message) mod L
+    crypto_sha512_init(&sha);
+    crypto_sha512_update(&sha, R, 32);
+    crypto_sha512_update(&sha, secret_key + 32, 32); // public_key
+    if (message_size) { crypto_sha512_update(&sha, message, message_size); }
+    crypto_sha512_final(&sha, h64);
+    crypto_eddsa_reduce(h, h64);
+
+    // 5) S = (h * a + r) mod L; signature = R || S
+    COPY(signature, R, 32);
+    crypto_eddsa_mul_add(signature + 32, h, a, r);
+
+    // Wipe secrets
+    WIPE_CTX(&sha);
+    WIPE_BUFFER(a);   WIPE_BUFFER(r64); WIPE_BUFFER(h64);
+    WIPE_BUFFER(r);   WIPE_BUFFER(h);   WIPE_BUFFER(R);
+
+    // Optional (defense-in-depth; enable in debug builds):
+    // #ifdef MICROSUI_STRICT
+    // u8 pk_chk[32];
+    // crypto_eddsa_scalarbase(pk_chk, a);  // a[0..31] is the clamped scalar
+    // if (crypto_verify32(pk_chk, secret_key + 32)) {
+    //     // Mismatched seed/public key; handle as you prefer (abort/log).
+    // }
+    // WIPE_BUFFER(pk_chk);
+    // #endif
+}
+
+
 #ifdef MONOCYPHER_CPP_NAMESPACE
 }
 #endif
