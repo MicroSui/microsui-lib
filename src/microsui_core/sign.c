@@ -148,7 +148,7 @@ int microsui_verify_signature_ed25519(uint8_t sui_sig[97], const uint8_t* messag
     crypto_blake2b_update(&ctx, message, message_len);
     crypto_blake2b_final(&ctx, digest);
 
-    if(compact_ed25519_verify(signature, public_key, digest, 32)) return 0; 
+    if(crypto_ed25519_check_sha512(signature, public_key, digest, 32) == 0) return 0;    
     else return -1;
 }
 
