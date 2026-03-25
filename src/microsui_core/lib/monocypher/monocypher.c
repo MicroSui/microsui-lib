@@ -3383,8 +3383,8 @@ int crypto_ed25519_ph_check(const uint8_t sig[64], const uint8_t pk[32],
 
 
 // Added by MicroSui: Ed25519 signature (pure / RFC 8032) using SHA-512.
-// This function is byte-for-byte compatible with compact25519/ref10.
-// It does NOT replace Monocypher's crypto_ed25519_sign (which uses BLAKE2b).
+// This function is not part of the original Monocypher distribution; it is added by MicroSui
+// to provide compatibility with implementations that follow the standard SHA-512-based Ed25519.// It does NOT replace Monocypher's crypto_ed25519_sign (which uses BLAKE2b).
 // secret_key layout: seed[32] || public_key[32]
 // signature layout : R[32] || S[32]
 // Precondition: if message_size > 0, message must be non-NULL.
