@@ -8,7 +8,7 @@ LIB := $(MICROSUI_CORE)/lib
 MONOCYPHER := $(LIB)/monocypher
 COMPACT := $(LIB)/compact25519
 C25519 := $(COMPACT)/c25519
-JSMN := $(LIB)/JSMN
+JSMN := $(LIB)/jsmn
 
 HTTP_CURL_FILE = $(MICROSUI_CORE)/impl/http/http_curl.c # This Makefile needs cURL installed in the system
 HTTP_UNSUPPORTED_FILE = $(MICROSUI_CORE)/impl/http/http_unsupported.c # This file is used when make is made on a system without cURL support
