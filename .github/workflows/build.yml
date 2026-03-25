@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Add apt repository for build tools
-        uses: sudo add-apt-repository 'deb http://mirrors.kernel.org/ubuntu focal-updates main'
+        run: sudo add-apt-repository 'deb http://mirrors.kernel.org/ubuntu focal-updates main'
 
       - name: Update package lists
         run: sudo apt update
