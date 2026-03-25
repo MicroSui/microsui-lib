@@ -51,7 +51,7 @@ int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const siz
 
     // 4. Sign the digest using Ed25519 with the private key and public key
     uint8_t ed25519_signature[64];
-    compact_ed25519_sign(ed25519_signature, secret_key, digest, 32);
+    crypto_ed25519_sign_sha512(ed25519_signature, secret_key, digest, 32);
 
     // 5. Build Sui signature
     sui_sig[0] = 0x00;  // Ed25519 Scheme
