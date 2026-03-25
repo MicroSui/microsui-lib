@@ -20,10 +20,10 @@ WIFI_UNSUPPORTED_FILE = $(MICROSUI_CORE)/impl/wifi/wifi_unsupported.c # This fil
 CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(MICROSUI_CORE) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519) -I$(JSMN)
 
 SOURCES := offline_sign_with_bech32_privkey.c \
-			$(SRC)/*.c \
-			$(MICROSUI_CORE)/*.c \
-			$(UTILS)/*.c \
-			$(JSMN)/*.c \
+			$(wildcard $(SRC)/*.c) \
+			$(wildcard $(MICROSUI_CORE)/*.c) \
+			$(wildcard $(UTILS)/*.c) \
+			$(wildcard $(JSMN)/*.c) \
 			$(wildcard $(MONOCYPHER)/*.c) \
 			$(wildcard $(COMPACT)/*.c) \
 			$(wildcard $(C25519)/*.c) \
