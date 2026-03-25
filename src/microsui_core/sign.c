@@ -7,7 +7,6 @@
 #include <errno.h>
 #include "byte_conversions.h"
 #include "lib/monocypher/monocypher.h"
-#include "lib/compact25519/compact_ed25519.h"
 
 /**
  * @brief Sign a Sui Transaction message using Ed25519 and produce a Sui-formatted signature.
