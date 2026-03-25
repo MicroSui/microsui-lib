@@ -58,8 +58,6 @@ microsui-lib/
 │   ├── microsui_core
 │   │   ├── lib/                    # Third-party dependencies
 │   │   │   ├── monocypher/
-│   │   │   ├── compact25519/
-│   │   │   │   └── c25519/
 │   │   │   └── jsmn/
 │   │   ├── impl/                   # Platform/board specific implementation
 │   │   │   ├── http/
@@ -89,9 +87,7 @@ microsui-lib/
 ### 📦 Dependencies (`/lib`)
 
 - `monocypher`:  
-  Lightweight cryptographic primitives.
-- `compact25519`:  
-  Ed25519 key format support.
+  Lightweight Ed25519 cryptographic primitives.
 - `jsmn`:
   Lightweight minimalistic JSON parser for C.
 
