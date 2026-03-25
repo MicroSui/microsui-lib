@@ -1,0 +1,24 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install build tools
+        run: sudo apt install -y libcurl4-openssl-dev pkg-config build-essential
+
+      - name: Run make
+        run: make
+
+      - name: Confirm success
+        run: echo "Makefile executed successfully"
