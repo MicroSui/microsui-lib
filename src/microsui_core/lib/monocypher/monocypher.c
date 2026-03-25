@@ -3446,6 +3446,39 @@ void crypto_ed25519_sign_sha512(uint8_t signature[64],
     // #endif
 }
 
+// Ed25519 signature verification (pure / RFC 8032) using SHA-512.
+// This function is not part of the original Monocypher distribution; it is added by MicroSui
+// to provide compatibility with implementations that follow the standard SHA-512-based Ed25519.
+// It does NOT replace Monocypher's crypto_ed25519_check (which uses BLAKE2b).
+// public_key layout: A[32]
+// signature layout : R[32] || S[32]
+// Precondition: if msg_size > 0, msg must be non-NULL.
+int crypto_ed25519_check_sha512(const uint8_t signature[64], 
+								const uint8_t public_key[32],
+                                const uint8_t *msg, 
+								size_t msg_size)
+{
+    u8 h_ram[32];
+    u8 hash[64];
+    crypto_sha512_ctx sha;
+
+    // h = SHA512(R || A || M) mod L
+    crypto_sha512_init(&sha);
+    crypto_sha512_update(&sha, signature, 32);     // R
+    crypto_sha512_update(&sha, public_key, 32);    // A
+    if (msg_size) { crypto_sha512_update(&sha, msg, msg_size); }
+    crypto_sha512_final(&sha, hash);
+
+    crypto_eddsa_reduce(h_ram, hash);
+
+	// Clean hash state
+    crypto_wipe(&sha, sizeof sha);
+    WIPE_BUFFER(hash);
+
+	// Check equation: [S]B = R + [h]A
+    return crypto_eddsa_check_equation(signature, public_key, h_ram);
+}
+
 
 #ifdef MONOCYPHER_CPP_NAMESPACE
 }

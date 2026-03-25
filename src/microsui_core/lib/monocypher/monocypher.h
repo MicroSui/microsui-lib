@@ -383,12 +383,16 @@ int crypto_ed25519_ph_check(const uint8_t signature   [64],
                             const uint8_t public_key  [32],
                             const uint8_t message_hash[64]);
 
-// Signature variants added by MicroSui
+// Variants added by MicroSui
 void crypto_ed25519_sign_sha512(uint8_t signature[64],
                                 const uint8_t secret_key[64],
                                 const uint8_t *message,
                                 size_t message_size);
 
+int crypto_ed25519_check_sha512(const uint8_t signature[64], 
+								const uint8_t public_key[32],
+                                const uint8_t *msg, 
+								size_t msg_size);
 
 #ifdef __cplusplus
 }
