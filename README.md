@@ -2,7 +2,7 @@
 
 <img src="assets/microsui-with-sui.png" align="right" height="190" />
 
-*MicroSui Library* is a lightweight C library designed primarily for embedded systems to interact with the ***Sui Network Blockchain***.
+_MicroSui Library_ is a lightweight C library designed primarily for embedded systems to interact with the **_Sui Network Blockchain_**.
 
 Full compatibility with _ESP32 microcontrollers_ and _traditional desktop OS_. More device support coming soon.
 
@@ -22,7 +22,7 @@ In Windows, macOS or Linux it will be necessary to install `cURL`:
 ##### In Linux:
 
 ```
-sudo apt install -y libcurl4-openssl-dev pkg-config build-essential
+sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
 ```
 
 ##### In macOS:

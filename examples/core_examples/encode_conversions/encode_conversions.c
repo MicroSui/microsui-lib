@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include "microsui/byte_conversions.h"
 
+#include "MicroSui.h"
 
 int main() {
     printf("\t\t Byte / HEXA and BASE64 CONVERSION examples:\n");
