@@ -197,7 +197,7 @@ static const char* ms_getSecretKey_impl(MicroSuiEd25519 *self) {
  */
 static const uint8_t* ms_getPublicKey_impl(MicroSuiEd25519 *self) {
     static uint8_t public_key[32]; // Placeholder for Sui address
-    get_public_key_from_private_key(self->secret_key, public_key);
+    microsui_derive_public_key_ed25519(public_key, self->secret_key);
 
     return public_key; // placeholder
 }
@@ -219,11 +219,11 @@ static const char* ms_toSuiAddress_impl(MicroSuiEd25519 *self) {
 
     // Obtain the public key from the secret key
     uint8_t public_key[32];
-    get_public_key_from_private_key(self->secret_key, public_key);
+    microsui_derive_public_key_ed25519(public_key, self->secret_key);
 
     // Encode public key to Sui address
     uint8_t encoded_address[32];
-    microsui_pubkey_to_sui_address(public_key, encoded_address);
+    microsui_derive_sui_address_ed25519(encoded_address, public_key);
 
     // Convert the encoded address to a hex string
     char encoded_address_string[65];
