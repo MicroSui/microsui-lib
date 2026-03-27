@@ -125,7 +125,7 @@ MicroSuiEd25519 SuiKeypair_fromSecretKey(const char *sk) {
     if (sk == NULL || strlen(sk) == 0 || strlen(sk) != PK_BECH32_LEN) return kp; // Error: Invalid secret key: return empty struct
 
     // Decode the secret key from Bech32
-    if (microsui_decode_sui_privkey(sk, kp.secret_key) != 0) return kp; // Error: Decoding failed: return empty struct
+    if (microsui_decode_bech32_private_key(kp.secret_key, sk) != 0) return kp; // Error: Decoding failed: return empty struct
 
     // Assign methods
     kp.signTransaction = ms_signTransaction_impl;
@@ -180,7 +180,7 @@ static SuiSignature ms_signTransaction_impl(MicroSuiEd25519 *self, const char *m
  */
 static const char* ms_getSecretKey_impl(MicroSuiEd25519 *self) {
     static char secret_key[PK_BECH32_LEN + 1]; // Placeholder for secret key
-    microsui_encode_sui_privkey(self->secret_key, secret_key);
+    microsui_encode_bech32_private_key(secret_key, self->secret_key);
 
     return secret_key; // placeholder
 }

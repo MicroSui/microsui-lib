@@ -16,7 +16,7 @@ int main() {
 
     // Decoding the Bech32 private key to bytes
     uint8_t private_key[32];
-    if (microsui_decode_sui_privkey(private_key_bech32, private_key) != 0) {
+    if (microsui_decode_bech32_private_key(private_key, private_key_bech32) != 0) {
         printf("Invalid Bech32 private key.\n");
         return -1;
     }
