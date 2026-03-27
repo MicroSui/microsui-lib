@@ -10,7 +10,11 @@ int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const siz
 
 int microsui_verify_signature_ed25519(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len);
 
+int microsui_verify_signature_ed25519_with_public_key(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len, uint8_t public_key[32]);
+
 int microsui_verify_signature(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len);
+
+int microsui_verify_signature_with_public_key(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len, uint8_t public_key[32]);
 
 /**
  * @deprecated  Use microsui_sign() or microsui_sign_ed25519() instead.

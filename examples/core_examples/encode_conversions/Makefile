@@ -6,8 +6,6 @@ UTILS := $(MICROSUI_CORE)/utils
 LIB := $(MICROSUI_CORE)/lib
 
 MONOCYPHER := $(LIB)/monocypher
-COMPACT := $(LIB)/compact25519
-C25519 := $(COMPACT)/c25519
 JSMN := $(LIB)/jsmn
 
 HTTP_CURL_FILE = $(MICROSUI_CORE)/impl/http/http_curl.c # This Makefile needs cURL installed in the system
@@ -17,7 +15,7 @@ HTTP_LIBS = -lcurl $(if $(filter Windows_NT,$(OS)),-lws2_32 -lbcrypt -lwldap32 -
 WIFI_DESKTOP_FILE = $(MICROSUI_CORE)/impl/wifi/wifi_desktop.c
 WIFI_UNSUPPORTED_FILE = $(MICROSUI_CORE)/impl/wifi/wifi_unsupported.c # This file is used when make is made on a system without WiFi support
 
-CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(MICROSUI_CORE) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(COMPACT) -I$(C25519) -I$(JSMN)
+CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(MICROSUI_CORE) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(JSMN)
 
 SOURCES := encode_conversions.c \
 			$(wildcard $(SRC)/*.c) \
@@ -25,8 +23,6 @@ SOURCES := encode_conversions.c \
 			$(wildcard $(UTILS)/*.c) \
 			$(wildcard $(JSMN)/*.c) \
 			$(wildcard $(MONOCYPHER)/*.c) \
-			$(wildcard $(COMPACT)/*.c) \
-			$(wildcard $(C25519)/*.c) \
 			$(HTTP_CURL_FILE) \
 			$(HTTP_UNSUPPORTED_FILE) \
 			$(WIFI_DESKTOP_FILE) \
