@@ -58,6 +58,10 @@ int microsui_derive_public_key_ed25519(uint8_t public_key[32], const uint8_t see
     // Generate public key from secret key using Ed25519
     uint8_t _[64];  // Placeholder for the secret key (not used here)
     crypto_ed25519_key_pair(_, public_key, seed_cp);
+
+    // Clear sensitive data from memory
+    crypto_wipe(seed_cp, sizeof seed_cp);
+    crypto_wipe(_, sizeof _);
     
     return 0;
 }

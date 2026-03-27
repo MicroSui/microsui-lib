@@ -3,9 +3,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "lib/monocypher/monocypher.h"
 
 #include "cryptography.h"
-
 
 static const char ALPHABET[] = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
 
@@ -169,6 +169,14 @@ int microsui_decode_bech32_private_key(uint8_t seed_output[32], const char *priv
     if (ext_len != 33) return -1;
 
     memcpy(seed_output, ext_secret + 1, 32);
+
+    // Clear sensitive data from memory
+    crypto_wipe(ext_secret, sizeof ext_secret);
+    crypto_wipe(hrp_expanded, sizeof hrp_expanded);
+    crypto_wipe(words, sizeof words);
+    crypto_wipe(data5, sizeof data5);
+    crypto_wipe(str, sizeof str);
+
     return 0;
 }
 
@@ -225,5 +233,11 @@ int microsui_encode_bech32_private_key(char *private_key_bech_output, const uint
         private_key_bech_output[idx++] = ALPHABET[checksum[i]];
     }
     private_key_bech_output[idx] = '\0'; // null-terminator
+
+    // Clear sensitive data from memory
+    crypto_wipe(checksum, sizeof checksum);
+    crypto_wipe(data5, sizeof data5);
+    crypto_wipe(data, sizeof data);
+
     return 0;
 }
