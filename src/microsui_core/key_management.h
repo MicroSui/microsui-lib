@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
-int microsui_pubkey_to_sui_address(const uint8_t pubkey[32], uint8_t sui_address_out[32]);
+int microsui_derive_sui_address_ed25519(uint8_t sui_address_out[32], const uint8_t pubkey[32]);
 
-int get_public_key_from_private_key(const uint8_t private_key[32], uint8_t public_key[32]);
+int microsui_derive_public_key_ed25519(uint8_t public_key[32], const uint8_t secret_key[32]);
 
 #endif
