@@ -6,8 +6,8 @@
 
 #define PK_BECH32_LEN 70   // Length of Sui private key in Bech32 format
 
-int microsui_decode_sui_privkey(const char *privkey_bech, uint8_t privkey_bytes_output[32]);
+int microsui_decode_bech32_private_key(uint8_t secret_key_bytes_output[32], const char *private_key_bech);
 
-int microsui_encode_sui_privkey(const uint8_t *privkey_bytes, char *privkey_bech_output);
+int microsui_encode_bech32_private_key(char *private_key_bech_output, const uint8_t *secret_key_bytes);
 
 #endif
