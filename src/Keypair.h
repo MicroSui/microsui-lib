@@ -21,7 +21,7 @@ typedef struct {
 typedef struct MicroSuiEd25519 MicroSuiEd25519;
 
 struct MicroSuiEd25519 {
-    uint8_t secret_key[32];
+    uint8_t seed[32];
 
     // OO-style methods
     SuiSignature (*signTransaction)(MicroSuiEd25519 *self, const char *msg);
@@ -33,7 +33,7 @@ struct MicroSuiEd25519 {
 // ==========================
 // Constructors
 // ==========================
-MicroSuiEd25519 SuiKeypair_generate(uint8_t seed_extra);
+MicroSuiEd25519 SuiKeypair_generate(uint8_t rng_entropy);
 MicroSuiEd25519 SuiKeypair_fromSecretKey(const char *sk);
 
 #endif // MICROSUI_KEYPAIR_H

@@ -37,7 +37,7 @@ int main(void) {
         printf("\t   - Signature Verification is CORRECT for Message 1 -- OK\n");
     // Validation with message 2 (incorrect)
     int verification_result_2 = microsui_verify_signature(sig.bytes, tx2.tx_bytes.data, tx2.tx_bytes.length);
-    if(verification_result_2 == -1)
+    if(verification_result_2 != 0)
         printf("\t   - Signature Verification is FAILED for Message 2 -- OK\n");
 
     printf("\n\n\t\t --- END OF TRANSACTION DEMO ---\n");

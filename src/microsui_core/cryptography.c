@@ -103,13 +103,12 @@ static void bech32_create_checksum(const char *hrp, const uint8_t *data, size_t 
 }
 
 /**
- * @brief Decode a Sui Bech32 private key string into 32 raw secret key bytes.
+ * @brief Decode a Sui Bech32 private key string into 32 raw seed bytes.
  *
  * Validates the Bech32-encoded private key (HRP = "suiprivkey", no mixed case),
- * converts the 5-bit words back to 8-bit bytes, and extracts the 32-byte secret
- * (sk) after the 1-byte scheme flag.
+ * converts the 5-bit words back to 8-bit bytes, and extracts the 32-byte seed after the 1-byte scheme flag.
  *
- * @param[out] secret_key_bytes_output  Output buffer for the 32-byte secret key.
+ * @param[out] seed_output              Output buffer for the 32-byte seed private key.
  * @param[in]  private_key_bech         Null-terminated Bech32 private key string ("suiprivkey1...").
  *
  * @return 0 on success; -1 on invalid length/format, mixed case, bad alphabet,
@@ -118,7 +117,7 @@ static void bech32_create_checksum(const char *hrp, const uint8_t *data, size_t 
  * @note Expects total string length == PK_BECH32_LEN. Mixed case is rejected.
  * @note The returned key is the 32-byte seed; callers must handle it securely.
  */
-int microsui_decode_bech32_private_key(uint8_t secret_key_bytes_output[32], const char *private_key_bech) {
+int microsui_decode_bech32_private_key(uint8_t seed_output[32], const char *private_key_bech) {
     size_t len = strlen(private_key_bech);
     if (len != PK_BECH32_LEN) return -1;
 
@@ -169,19 +168,19 @@ int microsui_decode_bech32_private_key(uint8_t secret_key_bytes_output[32], cons
     if (!convert_bits(ext_secret, &ext_len, words, words_len, 5, 8, false)) return -1;
     if (ext_len != 33) return -1;
 
-    memcpy(secret_key_bytes_output, ext_secret + 1, 32);
+    memcpy(seed_output, ext_secret + 1, 32);
     return 0;
 }
 
 /**
- * @brief Encode a 32-byte secret key into a Sui Bech32 private key string.
+ * @brief Encode a 32-byte seed into a Sui Bech32 private key string.
  *
- * Builds the Bech32 payload as: [1-byte scheme flag (0x00) | 32-byte secret],
+ * Builds the Bech32 payload as: [1-byte scheme flag (0x00) | 32-byte seed],
  * converts to 5-bit words, appends checksum, and writes the Bech32 string with
  * HRP = "suiprivkey".
  *
  * @param[out] private_key_bech_output  Output buffer for the null-terminated Bech32 string.
- * @param[in]  secret_key_bytes         Pointer to the 32-byte secret key.
+ * @param[in]  seed_bytes              Pointer to the 32-byte seed.
  *                                        Must have capacity >= PK_BECH32_LEN + 1.
  *
  * @return 0 on success; -1 on conversion failure or insufficient output capacity.
@@ -189,14 +188,14 @@ int microsui_decode_bech32_private_key(uint8_t secret_key_bytes_output[32], cons
  * @note The output uses lowercase Bech32 alphabet and includes the null terminator.
  * @note Callers are responsible for providing a sufficiently large output buffer.
  */
-int microsui_encode_bech32_private_key(char *private_key_bech_output, const uint8_t *secret_key_bytes) {
+int microsui_encode_bech32_private_key(char *private_key_bech_output, const uint8_t *seed) {
     const char *hrp = "suiprivkey";
     const uint8_t scheme_flag = 0x00;
     const size_t output_len = PK_BECH32_LEN + 1;
 
     uint8_t data[33];
     data[0] = scheme_flag;
-    memcpy(data + 1, secret_key_bytes, 32);
+    memcpy(data + 1, seed, 32);
 
     size_t data5_len = 0;
     uint8_t data5[(33 * 8 + 4) / 5 + 1];

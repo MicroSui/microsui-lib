@@ -47,7 +47,7 @@ void setup()
     // 4) Validating Message2 with the signature (Must be FAILED)
     Serial.println(F("\n [4/4] Validating Message2 with the signature (Must be FAILED)..."));
     int verification_result_2 = microsui_verify_signature(sig.bytes, tx2.tx_bytes.data, tx2.tx_bytes.length);
-    if (verification_result_2 == 0)
+    if (verification_result_2 != 0)
         Serial.println(F("\t   - Signature Verification is FAILED for Message 2 -- OK\n\n"));
 
     Serial.println(F("  Done."));

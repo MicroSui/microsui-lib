@@ -18,7 +18,7 @@ int main() {
 
     printf("\t1 - decode_sui_privkey:\n");
     uint8_t private_key_output[32];
-    if (microsui_decode_sui_privkey(private_key_1_bech32, private_key_output) == 0) {
+    if (microsui_decode_bech32_private_key(private_key_output, private_key_1_bech32) == 0) {
         printf("Original Bech32 Key: %s\n", private_key_1_bech32);
         printf("Decoded Key: ");
         for (int i = 0; i < 32; i++) {
@@ -31,7 +31,7 @@ int main() {
 
     printf("\n\n\t2 - encode_sui_privkey:\n");
     char private_key_bech32_output[71];
-    if (microsui_encode_sui_privkey(private_key_2, private_key_bech32_output) == 0) {
+    if (microsui_encode_bech32_private_key(private_key_bech32_output, private_key_2) == 0) {
         printf("Original Hexa Key: ");
         for (int i = 0; i < 32; i++) {
             printf("%02x", private_key_2[i]);
