@@ -24,7 +24,7 @@ int main() {
     uint8_t message[message_len];
     hex_to_bytes(message_hex, message, message_len);
 
-    // Generating the Sui Signature from the message and private key (private_key is in constant.h)
+    // Generating the Sui Signature from the message and private key
     uint8_t sui_sig[97];
     printf("\n\n\n  Generating Signature...\n");
     microsui_sign_ed25519(sui_sig, message, message_len, private_key_seed);
