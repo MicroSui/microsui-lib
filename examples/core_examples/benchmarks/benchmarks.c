@@ -57,16 +57,16 @@ int main() {
     printf("\t Benchmarks Results:\n");
     printf("\t\t Time taken for signing: ");
     if (time_taken_signature > 100000) {
-        printf("%llu ms\n", time_taken_signature / 1000);
+        printf("%llu ms\n", (unsigned long long)(time_taken_signature / 1000));
     } else {
-        printf("%.2f ms (%llu us) \n", (double)time_taken_signature / 1000.0, time_taken_signature);
+        printf("%.2f ms (%llu us) \n", (double)time_taken_signature / 1000.0, (unsigned long long)time_taken_signature);
     }
 
     printf("\t\t Time taken for verification: ");
     if (time_taken_verification > 100000) {
-        printf("%llu ms\n", time_taken_verification / 1000);    
+        printf("%llu ms\n", (unsigned long long)(time_taken_verification / 1000));
     } else {
-        printf("%.2f ms (%llu us) \n", (double)time_taken_verification / 1000.0, time_taken_verification);
+        printf("%.2f ms (%llu us) \n", (double)time_taken_verification / 1000.0, (unsigned long long)time_taken_verification);
     }
     printf("\n End of benchmarks.\n");
 

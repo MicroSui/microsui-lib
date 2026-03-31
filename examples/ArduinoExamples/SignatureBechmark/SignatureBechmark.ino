@@ -51,7 +51,6 @@ void loop()
       Serial.println(verification_result);
   }
 
-
   Serial.print(F(" Time taken for signing: "));
   Serial.print(time_taken_signature);
   Serial.println(F(" ms"));
