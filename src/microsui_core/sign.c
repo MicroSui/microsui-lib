@@ -16,10 +16,10 @@
  * signs the digest with Ed25519, and encodes the result in the Sui signature
  * format (scheme byte + 64-byte Ed25519 signature + 32-byte public key).
  *
- * @param[out] sui_sig       Output buffer for the Sui signature (must be 97 bytes).
- * @param[in]  message       Pointer to raw transaction bytes (already serialized).
- * @param[in]  message_len   Length of the transaction bytes.
- * @param[in]  seed          32-byte Ed25519 private key seed.
+ * @param[out] sui_sig_out    Output buffer for the Sui signature (must be 97 bytes).
+ * @param[in]  message        Pointer to raw transaction bytes (already serialized).
+ * @param[in]  message_len    Length of the transaction bytes.
+ * @param[in]  seed           32-byte Ed25519 private key seed.
  *
  * @return 0 on success, negative value on error.
  *
@@ -27,7 +27,7 @@
  *       [0x00 scheme | 64-byte signature | 32-byte public key].
  * @note This function is specific to the Ed25519 scheme.
  */
-int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const size_t message_len, const uint8_t seed[32]) {
+int microsui_sign_ed25519(uint8_t sui_sig_out[97], const uint8_t* message, const size_t message_len, const uint8_t seed[32]) {
     // 1. Copy seed to a local variable
     uint8_t seed_cp[32];
     memcpy(seed_cp, seed, 32);
@@ -54,9 +54,9 @@ int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const siz
     crypto_ed25519_sign_sha512(ed25519_signature, secret_key, digest, 32);
 
     // 5. Build Sui signature
-    sui_sig[0] = 0x00;  // Ed25519 Scheme
-    memcpy(sui_sig + 1, ed25519_signature, 64);
-    memcpy(sui_sig + 65, public_key, 32);
+    sui_sig_out[0] = 0x00;  // Ed25519 Scheme
+    memcpy(sui_sig_out + 1, ed25519_signature, 64);
+    memcpy(sui_sig_out + 65, public_key, 32);
 
     crypto_wipe(secret_key, sizeof secret_key);
     crypto_wipe(seed_cp, sizeof seed_cp);
@@ -72,11 +72,11 @@ int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const siz
  * Dispatches to the appropriate signing routine depending on the provided
  * scheme identifier. Currently only Ed25519 (0x00) is implemented.
  *
- * @param[in]  scheme        Identifier of the signing scheme (0x00 = Ed25519).
- * @param[out] sui_sig       Output buffer for the Sui signature (must be 97 bytes).
- * @param[in]  message       Pointer to the message/transaction bytes.
- * @param[in]  message_len   Length of the message in bytes.
- * @param[in]  seed          32-byte private key seed.
+ * @param[out] sui_sig_out    Output buffer for the Sui signature (must be 97 bytes).
+ * @param[in]  scheme         Identifier of the signing scheme (0x00 = Ed25519).
+ * @param[in]  message        Pointer to the message/transaction bytes.
+ * @param[in]  message_len    Length of the message in bytes.
+ * @param[in]  seed           32-byte private key seed.
  *
  * @return 0 on success if scheme is supported,
  *         -1 if the scheme is not implemented or unsupported.
@@ -85,10 +85,10 @@ int microsui_sign_ed25519(uint8_t sui_sig[97], const uint8_t* message, const siz
  *       - 0x00: Ed25519 (implemented).
  *       - Others (Secp256k1, Secp256r1, Multisig, zkLogin, Passkey) are not yet implemented.
  */
-int microsui_sign(uint8_t scheme, uint8_t sui_sig[97], const uint8_t* message, const size_t message_len, const uint8_t seed[32]) {
+int microsui_sign(uint8_t sui_sig_out[97], uint8_t scheme, const uint8_t* message, const size_t message_len, const uint8_t seed[32]) {
     switch (scheme) {
         case 0x00: // Pure Ed25519
-            return microsui_sign_ed25519(sui_sig, message, message_len, seed);
+            return microsui_sign_ed25519(sui_sig_out, message, message_len, seed);
         case 0x01: // ECDSA Secp256k1
             fprintf(stderr, "Error: ECDSA Secp256k1 signing is not implemented yet in MicroSui.\n");
             return -1; // Not implemented
@@ -294,20 +294,20 @@ int microsui_verify_signature_with_public_key(uint8_t sui_sig[97], const uint8_t
  *             Please use microsui_sign() or microsui_sign_ed25519(),
  *             which provide better compatibility and performance.
  *
- * @param[out] sui_sig       Output buffer for the Sui signature (must be 97 bytes).
+ * @param[out] sui_sig_out    Output buffer for the Sui signature (must be 97 bytes).
  * @param[in]  message_hex   Null-terminated string containing the full serialized tx message in hexa form.
  * @param[in]  seed          32-byte Ed25519 private key seed.
  *
  * @return 0 on success, negative value on error.
  */
-int microsui_sign_message(uint8_t sui_sig[97], const char* message_hex, const uint8_t seed[32]) {
+int microsui_sign_message(uint8_t sui_sig_out[97], const char* message_hex, const uint8_t seed[32]) {
     // Convert the hex message to binary bytes
     size_t msg_len = strlen(message_hex) / 2;  // 2 hex chars = 1 byte
     uint8_t* message = (uint8_t*)malloc(msg_len);
     hex_to_bytes(message_hex, message, msg_len);
 
     // Call the new ED25519 sign function version
-    int res = microsui_sign_ed25519(sui_sig, message, msg_len, seed);
+    int res = microsui_sign_ed25519(sui_sig_out, message, msg_len, seed);
 
     free(message);
     return res;

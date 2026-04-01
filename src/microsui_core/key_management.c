@@ -13,8 +13,8 @@
  * then computes the BLAKE2b-256 hash of the 33-byte input.
  * The resulting 32-byte digest is the canonical Sui address.
  *
- * @param[out] sui_address_out  Output buffer for the 32-byte Sui address.
- * @param[in]  public_key           32-byte Ed25519 public key.
+ * @param[out] sui_address_out   Output buffer for the 32-byte Sui address.
+ * @param[in]  public_key        32-byte Ed25519 public key.
  *
  * @return 0 on success; -1 if input pointers are NULL.
  *
@@ -40,16 +40,16 @@ int microsui_derive_sui_address_ed25519(uint8_t sui_address_out[32], const uint8
  * Generates the full 64-byte Ed25519 secret key internally, then extracts
  * the corresponding public key.
  *
- * @param[out] public_key   Output buffer for the 32-byte public key.
- * @param[in]  seed  32-byte Ed25519 seed.
+ * @param[out] public_key_out   Output buffer for the 32-byte public key.
+ * @param[in]  seed             32-byte Ed25519 seed.
  *
  * @return 0 on success; -1 if input pointers are NULL.
  *
  * @note The seed is copied to a local buffer before use, 
  *       as the underlying library may modify it during key generation.
  */
-int microsui_derive_public_key_ed25519(uint8_t public_key[32], const uint8_t seed[32]) {
-    if (seed == NULL || public_key == NULL) return -1;
+int microsui_derive_public_key_ed25519(uint8_t public_key_out[32], const uint8_t seed[32]) {
+    if (seed == NULL || public_key_out == NULL) return -1;
 
     // Copy secret key to a local variable
     uint8_t seed_cp[32];
@@ -57,7 +57,7 @@ int microsui_derive_public_key_ed25519(uint8_t public_key[32], const uint8_t see
 
     // Generate public key from secret key using Ed25519
     uint8_t _[64];  // Placeholder for the secret key (not used here)
-    crypto_ed25519_key_pair(_, public_key, seed_cp);
+    crypto_ed25519_key_pair(_, public_key_out, seed_cp);
 
     // Clear sensitive data from memory
     crypto_wipe(seed_cp, sizeof seed_cp);
