@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <MicroSui.h>
 
 // --- PRIVATE KEY (EXAMPLE / DO NOT USE IN PRODUCTION) ---
@@ -15,7 +16,7 @@ void setup() {
   delay(500);
 
   Serial.println();
-  Serial.println(F("=== MicroSui ESP32 — Offline Sign Transaction Message - Obtain Sui Signature with PK ==="));
+  Serial.println(F("=== MicroSui Arduino — Offline Sign Transaction Message - Obtain Sui Signature with PK ==="));
 
   // 1) Load keypair from Bech32 secret key
   Serial.println(F("\n [1/2] Loading keypair from Bech32..."));

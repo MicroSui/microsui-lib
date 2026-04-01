@@ -13,7 +13,6 @@ all:
 		fi \
 	done
 	@echo ""
-	@echo "✅ All examples built successfully!"
 	@echo "---------------------------------------"
 	@for dir in $(EXAMPLE_DIRS); do \
 		if [ -f $$dir/Makefile ]; then \
@@ -23,4 +22,7 @@ all:
 			fi \
 		fi \
 	done
+	@echo ""
+	@echo "✅ All examples built successfully!"
 	@echo "---------------------------------------"
+

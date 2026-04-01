@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <MicroSui.h>
 
 // --- PRIVATE KEY (EXAMPLE / DO NOT USE IN PRODUCTION) ---
@@ -15,7 +16,7 @@ void setup()
     delay(500);
 
     Serial.println();
-    Serial.println(F("=== MicroSui ESP32 — Validation of a Sui Signature ==="));
+    Serial.println(F("=== MicroSui Arduino — Validation of a Sui Signature ==="));
 
     // 1) Generating Keypair, and Transactions Objects
     Serial.println(F("\n [1/4] Generating Keypair, and Transactions Objects..."));
@@ -47,7 +48,7 @@ void setup()
     // 4) Validating Message2 with the signature (Must be FAILED)
     Serial.println(F("\n [4/4] Validating Message2 with the signature (Must be FAILED)..."));
     int verification_result_2 = microsui_verify_signature(sig.bytes, tx2.tx_bytes.data, tx2.tx_bytes.length);
-    if (verification_result_2 == 0)
+    if (verification_result_2 != 0)
         Serial.println(F("\t   - Signature Verification is FAILED for Message 2 -- OK\n\n"));
 
     Serial.println(F("  Done."));

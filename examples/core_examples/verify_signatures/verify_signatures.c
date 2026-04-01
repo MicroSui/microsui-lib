@@ -7,44 +7,48 @@
 // Sui Message in hex format (this message must be signed)
 const char* message_hex = "00000200080065cd1d0000000000202e3d52393c9035afd1ef38abd7fce2dad71f0e276b522fb274f4e14d1df974720202000101000001010300000000010100d79a4c7a655aa80cf92069bbac9666705f1d7181ff9c2d59efbc7e6ec4c3379d0180dc491e55e7caabfcdd1b0f538928d8d54107b9c1def3ed0baa3aa5106ba8674f0dd01400000000204b7e9da00f30cd1edf4d40710213c15a862e1fc175f2edb2b2c870c8559d65cdd79a4c7a655aa80cf92069bbac9666705f1d7181ff9c2d59efbc7e6ec4c3379de80300000000000040ab3c000000000000";
 
-// You must place your bech32 private key here
-const char *private_key_bech32 = "suiprivkey1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq509duq";
+// You must place your seed private key / secret key (in bytes format) here.
+const uint8_t private_key_seed[32] = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
 
 int main() {
-    printf("\n\t\t\t --- Microsui - Sui OFFLINE Signature (with Bech32 Private Key)  ---\n");
+    printf("\n\t\t\t --- Sui Signature Verification ---\n");
     printf("\n\tOriginal Message: %s", message_hex);
-
-    // Decoding the Bech32 private key to bytes
-    uint8_t private_key[32];
-    if (microsui_decode_bech32_private_key(private_key, private_key_bech32) != 0) {
-        printf("Invalid Bech32 private key.\n");
-        return -1;
-    }
 
     // Converting the message from hex to bytes
     size_t message_len = strlen(message_hex) / 2; // 2 hex chars = 1 byte
     uint8_t message[message_len];
     hex_to_bytes(message_hex, message, message_len);
 
-    // Generating the Sui Signature from the message and private key (private_key is in constant.h)
+    // Generating the Sui Signature from the message and private key
     uint8_t sui_sig[97];
     printf("\n\n\n  Generating Signature...\n");
-    microsui_sign_ed25519(sui_sig, message, message_len, private_key);
-    printf("\t Signature created successfully\n");
+    microsui_sign_ed25519(sui_sig, message, message_len, private_key_seed);
+    printf("\t Signature created successfully\n\n");
 
     // Verifying the Sui Signature
     int verification_result = microsui_verify_signature(sui_sig, message, message_len);
     if(verification_result == 0) {
-        printf("\t Signature verified successfully\n\n");
+        printf("\t 1 - Signature verified successfully\n");
     } else {
         printf("\t Signature verification failed\n");
         printf("\t Error code: %d\n\n", verification_result);
     }
 
-    // Printing the Sui Signature in hex format
-    char sui_sig_hex[195]; // 2 hex chars per byte + null terminator
-    bytes_to_hex(sui_sig, 97, sui_sig_hex); // 97 bytes is the length of a Sui Signature
-    printf("\t Sui Signature (97 bytes): %s\n", sui_sig_hex);
+    // Veryfing the Sui Signature with the expected public key (derived from the seed private key)
+    uint8_t public_key[32];
+    microsui_derive_public_key_ed25519(public_key, private_key_seed);
+    verification_result = microsui_verify_signature_ed25519_with_public_key(sui_sig, message, message_len, public_key);
+    if(verification_result == 0) {
+        printf("\t 2 - Signature verified successfully with public key validation\n");
+    } else {
+        printf("\t Signature verification with public key validation failed\n");
+        printf("\t Error code: %d\n\n", verification_result);
+    }
 
     printf("\n\t SIGNATURE must be sended to the Gateway to be broadcasted to the Sui Network...\n");
 

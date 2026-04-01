@@ -8,7 +8,8 @@
  *
  * Features:
  * - Generate random keypairs from entropy.
- * - Initialize a keypair from a Bech32-encoded secret key string.
+ * - Initialize a keypair from a Sui Bech32-encoded private key string (also called 
+ *   "Secret Key" in the Mysten Labs TypeScript SDK).
  * - Sign transaction messages with Ed25519.
  * - Retrieve the secret key (Bech32), public key (raw bytes), and
  *   derive the Sui-formatted address.
@@ -17,7 +18,10 @@
  * - Functions returning strings or buffers use static internal storage.
  *   Results will be overwritten by subsequent calls and are not thread-safe.
  * - All cryptographic primitives are delegated to the MicroSui core modules.
- *
+ * - Mysten Labs' TypeScript SDK uses the term "Secret Key" for the Sui Bech32 encoded 
+ *   private key string. To maintain consistency with the TypeScript SDK, the naming 
+ *   convention "Secret Key" is used here regarding the Sui Bech32-encoded private key.
+ * 
  * Inspired by the Mysten Labs TypeScript SDK, adapted for embedded C.
  */
 
@@ -48,7 +52,7 @@ typedef struct {
 typedef struct MicroSuiEd25519 MicroSuiEd25519;
 
 struct MicroSuiEd25519 {
-    uint8_t secret_key[32];
+    uint8_t seed[32];
 
     // OO-style methods
     SuiSignature (*signTransaction)(MicroSuiEd25519 *self, const char *msg);
@@ -60,7 +64,7 @@ struct MicroSuiEd25519 {
 // ==========================
 // Constructor prototypes
 // ==========================
-MicroSuiEd25519 SuiKeypair_generate(uint8_t seed_extra);
+MicroSuiEd25519 SuiKeypair_generate(uint8_t rng_entropy);
 MicroSuiEd25519 SuiKeypair_fromSecretKey(const char *sk);
 
 // ==========================
@@ -82,19 +86,21 @@ static const char* ms_toSuiAddress_impl(MicroSuiEd25519 *self);
  * Function pointers for signing, retrieving keys, and deriving the
  * Sui address are also assigned.
  *
- * @param[in] seed_extra   Extra seed mixed with current time to initialize PRNG.
+ * @param[in] rng_entropy   High-quality entropy from hardware (ADC noise, 
+ *                          temperature jitter, etc.) or very high-quality software entropy. 
+ *                          Should NOT be predictable.
  *
  * @return Initialized MicroSuiEd25519 struct.
  */
-MicroSuiEd25519 SuiKeypair_generate(uint8_t seed_extra) {
+MicroSuiEd25519 SuiKeypair_generate(uint8_t rng_entropy) {
     MicroSuiEd25519 kp;
     memset(&kp, 0, sizeof(kp));
 
     // Generate a random secret key
-    unsigned seed = (unsigned)time(NULL) ^ seed_extra;
-    srand(seed);
+    unsigned rng = (unsigned)time(NULL) ^ rng_entropy;
+    srand(rng);
     for (size_t i = 0; i < 32; i++) {
-        kp.secret_key[i] = (uint8_t)(rand() % 256);
+        kp.seed[i] = (uint8_t)(rand() % 256);
     }
 
     // Assign methods
@@ -117,6 +123,10 @@ MicroSuiEd25519 SuiKeypair_generate(uint8_t seed_extra) {
  * @param[in] sk   Bech32-encoded secret key string.
  *
  * @return Initialized MicroSuiEd25519 struct, or empty if decoding fails.
+ * 
+ * @note Mysten Labs' TypeScript SDK uses the term "Secret Key" for the Sui Bech32 
+ *       encoded private key string. To maintain consistency with the TypeScript SDK,
+ *       the naming convention `fromSecretKey` is used here.
  */
 MicroSuiEd25519 SuiKeypair_fromSecretKey(const char *sk) {
     MicroSuiEd25519 kp;
@@ -125,7 +135,7 @@ MicroSuiEd25519 SuiKeypair_fromSecretKey(const char *sk) {
     if (sk == NULL || strlen(sk) == 0 || strlen(sk) != PK_BECH32_LEN) return kp; // Error: Invalid secret key: return empty struct
 
     // Decode the secret key from Bech32
-    if (microsui_decode_sui_privkey(sk, kp.secret_key) != 0) return kp; // Error: Decoding failed: return empty struct
+    if (microsui_decode_bech32_private_key(kp.seed, sk) != 0) return kp; // Error: Decoding failed: return empty struct
 
     // Assign methods
     kp.signTransaction = ms_signTransaction_impl;
@@ -159,7 +169,7 @@ static SuiSignature ms_signTransaction_impl(MicroSuiEd25519 *self, const char *m
     hex_to_bytes(msg, message, message_len);
 
     // sign
-    microsui_sign_ed25519(sig.bytes, message, message_len, self->secret_key);
+    microsui_sign_ed25519(sig.bytes, message, message_len, self->seed);
 
     // encode to base64
     bytes_to_base64(sig.bytes, 97, sig.signature, sizeof(sig.signature));
@@ -177,10 +187,14 @@ static SuiSignature ms_signTransaction_impl(MicroSuiEd25519 *self, const char *m
  * @param[in] self   Pointer to MicroSuiEd25519 instance.
  *
  * @return Pointer to a static null-terminated string containing the secret key.
+ * 
+ * @note Mysten Labs' TypeScript SDK returns the private key as a Sui Bech32 string 
+ *       with the name `Secret Key`. To maintain consistency with the TypeScript SDK,
+ *       the naming convention `getSecretKey` is used here.
  */
 static const char* ms_getSecretKey_impl(MicroSuiEd25519 *self) {
     static char secret_key[PK_BECH32_LEN + 1]; // Placeholder for secret key
-    microsui_encode_sui_privkey(self->secret_key, secret_key);
+    microsui_encode_bech32_private_key(secret_key, self->seed);
 
     return secret_key; // placeholder
 }
@@ -197,7 +211,7 @@ static const char* ms_getSecretKey_impl(MicroSuiEd25519 *self) {
  */
 static const uint8_t* ms_getPublicKey_impl(MicroSuiEd25519 *self) {
     static uint8_t public_key[32]; // Placeholder for Sui address
-    get_public_key_from_private_key(self->secret_key, public_key);
+    microsui_derive_public_key_ed25519(public_key, self->seed);
 
     return public_key; // placeholder
 }
@@ -219,11 +233,11 @@ static const char* ms_toSuiAddress_impl(MicroSuiEd25519 *self) {
 
     // Obtain the public key from the secret key
     uint8_t public_key[32];
-    get_public_key_from_private_key(self->secret_key, public_key);
+    microsui_derive_public_key_ed25519(public_key, self->seed);
 
     // Encode public key to Sui address
     uint8_t encoded_address[32];
-    microsui_pubkey_to_sui_address(public_key, encoded_address);
+    microsui_derive_sui_address_ed25519(encoded_address, public_key);
 
     // Convert the encoded address to a hex string
     char encoded_address_string[65];

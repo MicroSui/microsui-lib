@@ -2,7 +2,7 @@
 
 <img src="assets/microsui-with-sui.png" align="right" height="190" />
 
-*MicroSui Library* is a lightweight C library designed primarily for embedded systems to interact with the ***Sui Network Blockchain***.
+_MicroSui Library_ is a lightweight C library designed primarily for embedded systems to interact with the **_Sui Network Blockchain_**.
 
 Full compatibility with _ESP32 microcontrollers_ and _traditional desktop OS_. More device support coming soon.
 
@@ -10,6 +10,10 @@ This library is **_Arduino and PlatformIO Compatible_**
 
 [![microsui-lib on Arduino Registry](https://www.ardu-badge.com/badge/MicroSui.svg)](https://www.ardu-badge.com/MicroSui/ide)
 [![PlatformIO Registry](https://badges.registry.platformio.org/packages/gustavogb/library/microsui-lib.svg)](https://registry.platformio.org/libraries/gustavogb/microsui-lib)
+
+### Documentation API Reference Page:
+
+[![Docs](https://img.shields.io/badge/docs-docs.microsui.com-blue?logo=bookstack&logoColor=white)](https://docs.microsui.com)
 
 ## The Library:
 
@@ -22,7 +26,7 @@ In Windows, macOS or Linux it will be necessary to install `cURL`:
 ##### In Linux:
 
 ```
-sudo apt install -y libcurl4-openssl-dev pkg-config build-essential
+sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
 ```
 
 ##### In macOS:
@@ -45,7 +49,11 @@ In root, run
 make
 ```
 
-You will find the `.out` binaries to run in each example folder.
+You will find the `.out` binaries to run in each example folder. Run every example with
+
+```bash
+./example.out
+```
 
 ## Project Directory Structure:
 
@@ -58,8 +66,6 @@ microsui-lib/
 │   ├── microsui_core
 │   │   ├── lib/                    # Third-party dependencies
 │   │   │   ├── monocypher/
-│   │   │   ├── compact25519/
-│   │   │   │   └── c25519/
 │   │   │   └── jsmn/
 │   │   ├── impl/                   # Platform/board specific implementation
 │   │   │   ├── http/
@@ -89,9 +95,7 @@ microsui-lib/
 ### 📦 Dependencies (`/lib`)
 
 - `monocypher`:  
-  Lightweight cryptographic primitives.
-- `compact25519`:  
-  Ed25519 key format support.
+  Lightweight Ed25519 cryptographic primitives.
 - `jsmn`:
   Lightweight minimalistic JSON parser for C.
 

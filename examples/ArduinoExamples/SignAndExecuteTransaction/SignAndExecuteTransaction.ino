@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <MicroSui.h>
 
 // --- WiFi credentials (example) ---
@@ -22,7 +23,8 @@ void setup() {
   delay(500);
 
   Serial.println();
-  Serial.println(F("=== MicroSui ESP32 — Sign & Execute Transaction ==="));
+  Serial.println(F("=== MicroSui Arduino — Sign & Execute Transaction ==="));
+  Serial.println(F("=== Note: This example is guaranteed to work on ESP32 family, but may not work on other boards for the moment ==="));
 
   // 1) Connect WiFi
   Serial.println(F("\n [1/5] Connecting WiFi..."));
