@@ -11,6 +11,10 @@ This library is **_Arduino and PlatformIO Compatible_**
 [![microsui-lib on Arduino Registry](https://www.ardu-badge.com/badge/MicroSui.svg)](https://www.ardu-badge.com/MicroSui/ide)
 [![PlatformIO Registry](https://badges.registry.platformio.org/packages/gustavogb/library/microsui-lib.svg)](https://registry.platformio.org/libraries/gustavogb/microsui-lib)
 
+### Documentation API Reference Page:
+
+[![Docs](https://img.shields.io/badge/docs-docs.microsui.com-blue?logo=bookstack&logoColor=white)](https://docs.microsui.com)
+
 ## The Library:
 
 ### Build all the examples:
@@ -45,7 +49,11 @@ In root, run
 make
 ```
 
-You will find the `.out` binaries to run in each example folder.
+You will find the `.out` binaries to run in each example folder. Run every example with
+
+```bash
+./example.out
+```
 
 ## Project Directory Structure:
 
