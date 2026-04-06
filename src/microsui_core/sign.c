@@ -272,7 +272,6 @@ int microsui_verify_signature_ed25519_with_public_key(uint8_t sui_sig[97], const
     return 0; // Signature is valid and public key matches
 }
 
-
 /**
  * @brief Verify a Sui-formatted Ed25519 signature against a pre-computed digest
  *        and validate it against a known public key.
