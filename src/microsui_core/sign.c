@@ -10,6 +10,27 @@
 #include "byte_conversions.h"
 
 /**
+ * @brief Sign a pre-computed digest and build a Sui-formatted Ed25519 signature.
+ *
+ * Signs the given 32-byte digest using the provided Ed25519 secret key and
+ * assembles the result into the Sui signature format:
+ *   [0x00 scheme | 64-byte Ed25519 signature | 32-byte public key]
+ *
+ * @param[out] sui_sig_out    Output buffer for the Sui signature (must be 97 bytes).
+ * @param[in]  secret_key     64-byte Ed25519 secret key, as produced by crypto_ed25519_key_pair (dont confuse with the 32-byte seed).
+ * @param[in]  public_key     32-byte Ed25519 public key.
+ * @param[in]  digest         32-byte digest to sign.
+ */
+void microsui_sign_ed25519_from_digest(uint8_t sui_sig_out[97], const uint8_t secret_key[64], const uint8_t public_key[32], const uint8_t digest[32]) {
+    uint8_t ed25519_signature[64];
+    crypto_ed25519_sign_sha512(ed25519_signature, secret_key, digest, 32);
+
+    sui_sig_out[0] = 0x00;  // Ed25519 Scheme
+    memcpy(sui_sig_out + 1, ed25519_signature, 64);
+    memcpy(sui_sig_out + 65, public_key, 32);
+}
+
+/**
  * @brief Sign a Sui Transaction message using Ed25519 and produce a Sui-formatted signature.
  *
  * Builds the "message with intent" (prefix + tx bytes), digests it with BLAKE2b,
@@ -49,14 +70,8 @@ int microsui_sign_ed25519(uint8_t sui_sig_out[97], const uint8_t* message, const
     
     crypto_blake2b_final(&ctx, digest);
 
-    // 4. Sign the digest using Ed25519 with the secret key and public key
-    uint8_t ed25519_signature[64];
-    crypto_ed25519_sign_sha512(ed25519_signature, secret_key, digest, 32);
-
-    // 5. Build Sui signature
-    sui_sig_out[0] = 0x00;  // Ed25519 Scheme
-    memcpy(sui_sig_out + 1, ed25519_signature, 64);
-    memcpy(sui_sig_out + 65, public_key, 32);
+    // 4. Sign the digest and build the Sui signature
+    microsui_sign_ed25519_from_digest(sui_sig_out, secret_key, public_key, digest);
 
     crypto_wipe(secret_key, sizeof secret_key);
     crypto_wipe(seed_cp, sizeof seed_cp);
@@ -152,7 +167,46 @@ int microsui_verify_signature_ed25519(uint8_t sui_sig[97], const uint8_t* messag
     if(crypto_ed25519_check_sha512(signature, public_key, digest, 32) != 0) {
         return -2; // Signature verification failed
     }
-    
+
+    return 0; // Signature is valid
+}
+
+/**
+ * @brief Verify a Sui-formatted Ed25519 signature against a pre-computed digest.
+ *
+ * Expects a Sui signature encoded as:
+ *   [0x00 scheme | 64-byte Ed25519 signature | 32-byte public key]
+ *
+ * Extracts the Ed25519 signature and public key from the Sui signature payload,
+ * then verifies them against the caller-supplied 32-byte digest.
+ *
+ * @param[in] sui_sig    Pointer to the Sui signature buffer (must be 97 bytes).
+ * @param[in] digest     32-byte pre-computed digest to verify against.
+ *
+ * @return 0 if the signature is valid,
+ *         -1 if the scheme byte is not Ed25519 (0x00),
+ *         -2 if the signature verification fails.
+ *
+ * @note This function does not compute the digest internally; it expects
+ *       the caller to provide a ready-to-verify 32-byte digest.
+ * @note This function does not recover a public key; it verifies using the public key
+ *       embedded inside the Sui signature payload.
+ */
+int microsui_verify_signature_ed25519_from_digest(uint8_t sui_sig[97], const uint8_t digest[32]) {
+    if(sui_sig[0] != 0x00) {
+        return -1; // This is not an Ed25519 signature
+    }
+
+    uint8_t signature[64];
+    memcpy(signature, sui_sig + 1, 64);
+
+    uint8_t public_key[32];
+    memcpy(public_key, sui_sig + 65, 32);
+
+    if(crypto_ed25519_check_sha512(signature, public_key, digest, 32) != 0) {
+        return -2; // Signature verification failed
+    }
+
     return 0; // Signature is valid
 }
 
@@ -201,6 +255,61 @@ int microsui_verify_signature_ed25519_with_public_key(uint8_t sui_sig[97], const
     crypto_blake2b_update(&ctx, intent, sizeof intent);
     crypto_blake2b_update(&ctx, message, message_len);
     crypto_blake2b_final(&ctx, digest);
+
+    if(crypto_ed25519_check_sha512(signature, signature_public_key, digest, 32) != 0) { 
+        return -2; // Signature verification failed
+    }
+
+    // Check if the public key in the signature matches the provided public key (with timing attacks protection)
+    uint8_t diff = 0;
+    for (size_t i = 0; i < 32; i++) {
+        diff |= signature_public_key[i] ^ public_key[i];
+    }
+    if (diff != 0) { 
+        return -3; // Public key mismatch
+    }
+
+    return 0; // Signature is valid and public key matches
+}
+
+
+/**
+ * @brief Verify a Sui-formatted Ed25519 signature against a pre-computed digest
+ *        and validate it against a known public key.
+ *
+ * Expects a Sui signature encoded as:
+ *   [0x00 scheme | 64-byte Ed25519 signature | 32-byte public key]
+ *
+ * Extracts the Ed25519 signature and public key from the Sui signature payload,
+ * verifies them against the caller-supplied 32-byte digest, and then confirms
+ * that the embedded public key matches the caller-supplied key using a
+ * constant-time comparison.
+ *
+ * @param[in] sui_sig        Pointer to the Sui signature buffer (must be 97 bytes).
+ * @param[in] digest         32-byte pre-computed digest to verify against.
+ * @param[in] public_key     Pointer to the expected 32-byte Ed25519 public key.
+ *
+ * @return  0 if the signature is valid and the embedded public key matches @p public_key,
+ *         -1 if the scheme byte is not Ed25519 (0x00),
+ *         -2 if the signature verification fails,
+ *         -3 if the public key embedded in the signature does not match @p public_key.
+ *
+ * @note This function does not compute the digest internally; it expects
+ *       the caller to provide a ready-to-verify 32-byte digest.
+ * @note The public key comparison is performed in constant time to mitigate timing attacks.
+ * @note Signature verification (-2) is checked before public key comparison (-3); a -3 result
+ *       therefore implies the signature itself was cryptographically valid.
+ */
+int microsui_verify_signature_ed25519_with_public_key_from_digest(uint8_t sui_sig[97], const uint8_t digest[32], uint8_t public_key[32]) {
+    if(sui_sig[0] != 0x00) {
+        return -1; // This is not an Ed25519 signature
+    }
+
+    uint8_t signature[64];
+    memcpy(signature, sui_sig + 1, 64);
+
+    uint8_t signature_public_key[32];
+    memcpy(signature_public_key, sui_sig + 65, 32);
 
     if(crypto_ed25519_check_sha512(signature, signature_public_key, digest, 32) != 0) { 
         return -2; // Signature verification failed
