@@ -4,7 +4,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <errno.h>
 #include "lib/monocypher/monocypher.h"
 
 #include "byte_conversions.h"
