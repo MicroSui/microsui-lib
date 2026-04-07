@@ -17,7 +17,7 @@ WIFI_UNSUPPORTED_FILE = $(MICROSUI_CORE)/impl/wifi/wifi_unsupported.c # This fil
 
 CFLAGS := -Wall -Wextra -I$(INCLUDE) -I$(SRC) -I$(MICROSUI_CORE) -I$(UTILS) -I$(LIB) -I$(MONOCYPHER) -I$(JSMN)
 
-SOURCES := benchmarks.c \
+SOURCES := benchmark.c \
 			$(wildcard $(SRC)/*.c) \
 			$(wildcard $(MICROSUI_CORE)/*.c) \
 			$(wildcard $(UTILS)/*.c) \
@@ -28,7 +28,7 @@ SOURCES := benchmarks.c \
 			$(WIFI_DESKTOP_FILE) \
 			$(WIFI_UNSUPPORTED_FILE)
 
-OUTPUT := benchmarks.out
+OUTPUT := benchmark.out
 
 all: clean_before_build $(OUTPUT)
 

@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## \[0.3.4] - 2026-04-07
+
+This release introduces lower-level signing primitives designed for resource-constrained microcontrollers, allowing developers to work directly with pre-computed **_BLAKE2b digests_** (significantly reducing the data that needs to be transferred between components) or skip redundant steps when intermediate values such as the derived keypair are already available in memory.
+
+- Added `microsui_sign_ed25519_from_digest()`: accepts a pre-computed _32-byte BLAKE2b digest_ instead of the _full transaction message_, significantly reducing the data that needs to be transferred between components, a critical advantage in embedded communication pipelines where bandwidth and memory are limited.
+- Added `microsui_sign_ed25519_from_keypair()`: accepts a precomputed keypair directly, avoiding redundant key derivation.
+- Added new keypair derivation function.
+- Improved benchmark to cover all new operations.
+
+---
+
 ## \[0.3.3] - 2026-04-01
 
 - Added new mod functions to Monocypher library (these functions are more efficient than the compact25519 ones).

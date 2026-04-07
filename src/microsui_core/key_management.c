@@ -62,6 +62,39 @@ int microsui_derive_public_key_ed25519(uint8_t public_key_out[32], const uint8_t
     // Clear sensitive data from memory
     crypto_wipe(seed_cp, sizeof seed_cp);
     crypto_wipe(_, sizeof _);
-    
+
     return 0;
 }
+
+/**
+ * @brief Derive an Ed25519 key pair (64-byte secret key and 32-byte public key) from a 32-byte seed.
+ *
+ * Generates the full 64-byte Ed25519 secret key and its corresponding
+ * 32-byte public key from the provided seed.
+ *
+ * @param[out] secret_key_out   Output buffer for the 64-byte Ed25519 secret key.
+ * @param[out] public_key_out   Output buffer for the 32-byte Ed25519 public key.
+ * @param[in]  seed             32-byte Ed25519 seed.
+ *
+ * @return 0 on success; -1 if input pointers are NULL.
+ *
+ * @note The seed is copied to a local buffer before use,
+ *       as the underlying library may modify it during key generation.
+ * @note The caller is responsible for wiping secret_key_out when no longer needed.
+ */
+int microsui_derive_keypair_ed25519(uint8_t secret_key_out[64], uint8_t public_key_out[32], const uint8_t seed[32]) {
+    if (seed == NULL || secret_key_out == NULL || public_key_out == NULL) return -1;
+
+    // Copy seed to a local variable
+    uint8_t seed_cp[32];
+    memcpy(seed_cp, seed, 32);
+
+    // Generate secret and public key from seed using Ed25519
+    crypto_ed25519_key_pair(secret_key_out, public_key_out, seed_cp);
+
+    // Clear sensitive data from memory
+    crypto_wipe(seed_cp, sizeof seed_cp);
+
+    return 0;
+}
+
