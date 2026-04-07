@@ -53,9 +53,15 @@ int main() {
     uint8_t sui_sig[97];
 
     uint64_t start_time = millis();
-    microsui_sign_ed25519(sui_sig, message, message_len, private_key_seed);
+    int sign_result = microsui_sign_ed25519(sui_sig, message, message_len, private_key_seed);
     uint64_t end_time = millis();
-    printf("\t Signature created successfully\n\n");
+    if(sign_result == 0) {
+        printf("\t Signature created successfully\n\n");
+    } else {
+        printf("\t Signature creation failed --\n");
+        printf("\t Error code: %d -- Aborting\n\n", sign_result);
+        return -1;
+    }
 
     // Calculate the time taken for verification
     uint64_t time_taken_signature = end_time - start_time;
@@ -83,7 +89,8 @@ int main() {
         printf("\t Signature verified successfully\n\n");
     } else {
         printf("\t Signature verification failed --\n");
-        printf("\t Error code: %d --\n\n", verification_result);
+        printf("\t Error code: %d -- Aborting\n\n", verification_result);
+        return -1;
     }
 
     // 4. Verifying the Sui Signature from the precalculated digest and signature
@@ -98,7 +105,8 @@ int main() {
         printf("\t Signature from digest verified successfully\n\n");
     } else {
         printf("\t Signature verification failed --\n");
-        printf("\t Error code: %d --\n\n", verification_result_from_digest);
+        printf("\t Error code: %d -- Aborting\n\n", verification_result_from_digest);
+        return -1;
     }
 
     /////// KEY MANAGEMENT ///////
@@ -112,7 +120,8 @@ int main() {
         printf("\t Public key derived successfully.\n\n");
     } else {
         printf("\t Public key derivation failed --\n\n");
-        printf("\t Error code: %d --\n\n", public_key_derivation_result);
+        printf("\t Error code: %d -- Aborting\n\n", public_key_derivation_result);
+        return -1;
     }
 
     printf("   6 - Deriving a Keypair (Secret Key + Public Key) from a 32-byte Ed25519 seed private key...\n");
@@ -126,7 +135,8 @@ int main() {
         printf("\t Keypair derived successfully.\n\n");
     } else {
         printf("\t Keypair derivation failed --\n\n");
-        printf("\t Error code: %d --\n\n", keypair_derivation_result);
+        printf("\t Error code: %d -- Aborting\n\n", keypair_derivation_result);
+        return -1;
     }
 
     printf("   7 - Deriving a Sui address from a 32-byte Ed25519 public key...\n");
@@ -142,7 +152,8 @@ int main() {
         printf("\n\n");
     } else {
         printf("\t Sui address derivation failed --\n\n");
-        printf("\t Error code: %d --\n\n", address_derivation_result);
+        printf("\t Error code: %d -- Aborting\n\n", address_derivation_result);
+        return -1;
     }
 
 
@@ -159,7 +170,8 @@ int main() {
         printf("\t Encoding successful. Encoded Bech32 Key: %s\n\n", private_key_bech32_output);
     } else {
         printf("\t Encoding failed --\n");
-        printf("\t Error code: %d --\n\n", encoding_result);
+        printf("\t Error code: %d -- Aborting\n\n", encoding_result);
+        return -1;
     }
 
     printf("   9 - Decoding the Sui Bech32 private key string into a 32 raw seed bytes...\n");
@@ -174,9 +186,9 @@ int main() {
         printf("\t Decoding successful.\n\n");
     } else {
         printf("\t Decoding failed --\n");
-        printf("\t Error code: %d --\n\n", decoding_result);
+        printf("\t Error code: %d -- Aborting\n\n", decoding_result);
+        return -1;
     }
-
 
 
     printf("\t  MicroSui Benchmarks Results:\n");
