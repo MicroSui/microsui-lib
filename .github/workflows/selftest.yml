@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/core_examples/benchmark
 
     steps:
       - name: Checkout code
@@ -17,14 +20,11 @@ jobs:
       - name: Install build tools
         run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
 
-      - name: Navigate to benchmark example directory
-        run: cd examples/core_examples/benchmark
-
       - name: Run make
         run: make
 
       - name: Run benchmark
-        run: ./benchmark.out
+        run: ./benchmark
 
       - name: Confirm success
         run: echo "Selftest completed successfully"
