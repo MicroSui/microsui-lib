@@ -71,7 +71,7 @@ int microsui_sign_ed25519(uint8_t sui_sig_out[97], const uint8_t* message, const
     crypto_blake2b_final(&ctx, digest);
 
     // 4. Sign the digest and build the Sui signature
-    microsui_sign_ed25519_from_digest(sui_sig_out, secret_key, public_key, digest);
+    microsui_sign_ed25519_from_digest(sui_sig_out, digest, secret_key, public_key);
 
     crypto_wipe(secret_key, sizeof secret_key);
     crypto_wipe(seed_cp, sizeof seed_cp);
@@ -118,7 +118,7 @@ void microsui_sign_ed25519_with_keys(uint8_t sui_sig_out[97], const uint8_t* mes
 
     crypto_blake2b_final(&ctx, digest);
 
-    microsui_sign_ed25519_from_digest(sui_sig_out, secret_key, public_key, digest);
+    microsui_sign_ed25519_from_digest(sui_sig_out, digest, secret_key, public_key);
 
     crypto_wipe(&ctx, sizeof ctx);
     crypto_wipe(digest, sizeof digest);
