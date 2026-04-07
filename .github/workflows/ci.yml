@@ -1,4 +1,4 @@
-name: Selftest
+name: MicroSui lib GitHub Actions CI
 
 on:
   push:
@@ -8,6 +8,22 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
+
+      - name: Run make
+        run: make
+
+      - name: Confirm success
+        run: echo "Makefile executed successfully"
+
+  selftest:
     runs-on: ubuntu-latest
     defaults:
       run:
