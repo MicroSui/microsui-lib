@@ -17,11 +17,11 @@
  *   [0x00 scheme | 64-byte Ed25519 signature | 32-byte public key]
  *
  * @param[out] sui_sig_out    Output buffer for the Sui signature (must be 97 bytes).
+ * @param[in]  digest         32-byte digest to sign.
  * @param[in]  secret_key     64-byte Ed25519 secret key, as produced by crypto_ed25519_key_pair (dont confuse with the 32-byte seed).
  * @param[in]  public_key     32-byte Ed25519 public key.
- * @param[in]  digest         32-byte digest to sign.
  */
-void microsui_sign_ed25519_from_digest(uint8_t sui_sig_out[97], const uint8_t secret_key[64], const uint8_t public_key[32], const uint8_t digest[32]) {
+void microsui_sign_ed25519_from_digest(uint8_t sui_sig_out[97], const uint8_t digest[32], const uint8_t secret_key[64], const uint8_t public_key[32]) {
     uint8_t ed25519_signature[64];
     crypto_ed25519_sign_sha512(ed25519_signature, secret_key, digest, 32);
 
@@ -79,6 +79,48 @@ int microsui_sign_ed25519(uint8_t sui_sig_out[97], const uint8_t* message, const
     crypto_wipe(digest, sizeof digest);
 
     return 0;
+}
+
+/**
+ * @brief Sign a Sui Transaction message using pre-derived Ed25519 keys.
+ *        This function is a variant of microsui_sign_ed25519(), the purpose of which is skipping the key pair 
+ *        derivation step which is an expensive part of the signing process. This makes it suitable for low-power devices 
+ *        where CPU time is critical and the caller can manage key pairs separately for better performance.
+ * 
+ * Builds the "message with intent" (prefix + tx bytes), digests it with BLAKE2b,
+ * signs the digest with Ed25519, and encodes the result in the Sui signature
+ * format (scheme byte + 64-byte Ed25519 signature + 32-byte public key).
+ *
+ * Unlike microsui_sign_ed25519(), this function skips key pair derivation,
+ * which is the an expensive step (~50% of the total signing time).
+ * The caller is responsible for providing a valid key pair.
+ *
+ * @param[out] sui_sig_out    Output buffer for the Sui signature (must be 97 bytes).
+ * @param[in]  message        Pointer to raw transaction bytes (already serialized).
+ * @param[in]  message_len    Length of the transaction bytes.
+ * @param[in]  secret_key     64-byte Ed25519 secret key, as produced by crypto_ed25519_key_pair (dont confuse with the 32-byte seed).
+ * @param[in]  public_key     32-byte Ed25519 public key.
+ *
+ * @warning No validation is performed to check that the public key corresponds
+ *          to the secret key. Passing mismatched keys will produce an invalid signature.
+ *          It's up to the caller to ensure that the provided key pair is correct and corresponds to the intended signing identity.
+ */
+void microsui_sign_ed25519_with_keys(uint8_t sui_sig_out[97], const uint8_t* message, const size_t message_len, const uint8_t secret_key[64], const uint8_t public_key[32]) {
+    uint8_t digest[32];
+
+    crypto_blake2b_ctx ctx;
+    crypto_blake2b_init(&ctx, 32);
+
+    const uint8_t intent[3] = {0x00, 0x00, 0x00};
+    crypto_blake2b_update(&ctx, intent, sizeof intent);
+    crypto_blake2b_update(&ctx, message, message_len);
+
+    crypto_blake2b_final(&ctx, digest);
+
+    microsui_sign_ed25519_from_digest(sui_sig_out, secret_key, public_key, digest);
+
+    crypto_wipe(&ctx, sizeof ctx);
+    crypto_wipe(digest, sizeof digest);
 }
 
 /**

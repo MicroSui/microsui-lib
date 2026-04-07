@@ -62,7 +62,7 @@ int main() {
     uint8_t sui_sig_from_digest[97];
 
     start_time = millis();
-    microsui_sign_ed25519_from_digest(sui_sig_from_digest, secret_key, public_key, random_digest);
+    microsui_sign_ed25519_from_digest(sui_sig_from_digest, random_digest, secret_key, public_key);
     end_time = millis();
 
     uint64_t time_taken_signature_from_digest = end_time - start_time;
