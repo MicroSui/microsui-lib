@@ -93,7 +93,8 @@ int microsui_sign_ed25519(uint8_t sui_sig_out[97], const uint8_t* message, const
  *
  * Unlike microsui_sign_ed25519(), this function skips key pair derivation,
  * which is the an expensive step (~50% of the total signing time).
- * The caller is responsible for providing a valid key pair.
+ * The caller is responsible for providing a valid key pair, which can be calculated once
+ * from microsui_derive_keypair_ed25519() function and reused across multiple signing operations.
  *
  * @param[out] sui_sig_out    Output buffer for the Sui signature (must be 97 bytes).
  * @param[in]  message        Pointer to raw transaction bytes (already serialized).
