@@ -24,7 +24,7 @@ jobs:
         run: make
 
       - name: Run benchmark
-        run: ./benchmark
+        run: ./benchmark.out
 
       - name: Confirm success
         run: echo "Selftest completed successfully"
